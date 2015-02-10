@@ -1,0 +1,183 @@
+<!DOCTYPE html> 
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet"	href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+<link rel="stylesheet" href="css/themes/MangoApp_theme.css" />
+<link rel="stylesheet" href="css/themes/MangoApp_theme.min.css" />
+<script src="http://code.jquery.com/jquery-1.11.2.min.js"></script>
+<script	src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+
+
+<script>
+$.ajax({
+	url : 'http://54.65.21.180:8080/appgetprojectmember',
+	dataType : 'json',
+	type : 'POST',
+	data : {
+		'Project_Id' : localStorage.getItem('Project_Id')
+	},
+	success : function(result) {
+		console.log(result);
+		var Project_Member_Name = [];
+		var Member_Id = [];
+		var dataform = JSON.stringify(result);
+		var temp = JSON.parse(dataform);
+		count = temp.length;
+		console.log(count);
+		for (var i = 0; i < count; i++) {
+			Project_Member_Name[i] = temp[i].Member_Name;
+			Member_Id[i] = temp[i].Member_Id;
+		}
+		var list = [];
+		var index = 0;
+		for (var i = 0; i < count; i++) {
+			list.push({
+				'title' : Project_Member_Name[i],
+				'id' : Member_Id[i]
+			});
+		}
+		var text = "";
+		$.each(list, function(index, item) {
+			text += "<option value="+item.id+">" + item.title
+					+ "</option>";
+		});
+		$('#select_participant_1').empty();
+		$('#select_participant_1').append(text).selectmenu('refresh');	
+	}
+});
+$
+.ajax({
+	url : 'http://54.65.21.180:8080/appshowmemo',
+	dataType : 'json',
+	type : 'POST',
+	data : {
+		'Project_Work_Id' : localStorage.getItem('Project_Work_Id')
+	},
+	success : function(result) {
+		var Work = new Array();	
+		var memodataform = JSON.stringify(result);
+		var memotemp = JSON.parse(memodataform);
+
+		var dataform = JSON.stringify(result.Work_Person);
+		var temp = JSON.parse(dataform);
+		
+		var count = temp.length;	
+		var text = '';
+			if(count ==0){
+				text = '';
+		}
+		else
+			{
+				for(var i = 0; i<count-1; i++){			
+					text += temp[i].User_Name + ', ';												
+					$("#select_participant_1 > option[value="+temp[i].User_Id+"]").attr('selected', 'selected');								
+				}
+				$("#select_participant_1 > option[value="+temp[i].User_Id+"]").attr('selected', 'selected');	
+				text += temp[i].User_Name;								
+				$("select_participant_1").selectmenu("refresh");
+				$("select_participant_1").listview("refresh");
+			}
+		if(result.Work_Finish == "ing"){
+		}
+		else
+			{			
+				$("#memoFinish").val("finish");
+				console.log($("#memoFinish").val());			
+				$("memoFinish").flipswitch("refresh");
+			}				
+		document.temp.selectmemotitle.value = result.Work_Name;		
+		document.temp.select_participant_1.value = text;
+		document.temp.modify_date1.value = result.Work_Dday;
+		document.temp.textarea_2.value = result.Work_Memo;			
+	}
+});
+function memomodifyfunc(){
+	var Work_Person = new Array();	
+	 var sel = document.getElementsByTagName('select').item(0);
+		console.log($('#select_participant_1 > option:selected').text());
+		$('#select_participant_1 > option:selected').each(function(){
+			var User_Info = new Object();
+			User_Info.User_Name = $(this).text();	 	
+			User_Info.User_Id = $(this).val();
+			Work_Person.push(User_Info);
+		});	
+		var dataform = JSON.stringify(Work_Person);
+			console.log(dataform);
+			$.ajax({
+				url : 'http://54.65.21.180:8080/appinsertmemo',
+				dataType : 'json',
+				type : 'POST',
+				data : {
+					'Project_Work_Id' : localStorage.getItem('Project_Work_Id'),
+					'Project_Id' : localStorage.getItem('Project_Id'),
+					'Work_Name' : $('#select_memotitle').val(),
+					'Work_Memo' : $('#textarea2').val(),
+					'Work_Dday' : $('#modify_date').val(),
+					'Work_Finish' : $('#memoFinish option:selected').val(),
+					'Work_Person' : dataform
+				},
+				success : function(result) {				
+					location.replace('memo_show.html');	
+				}
+			});		
+		
+		location.replace('memo_show.html');	
+}
+
+</script>
+</head> 
+<body> 
+
+	<div data-role="page" id="page">
+		<div data-role="header" data-position="fixed">
+			<h4></h4>
+			<a href="#" data-rel="back" data-icon="arrow-l" class="ui-btn-left" data-rel="back">뒤로</a>
+		</div>
+		<div data-role="content">	
+
+			<form name ="temp">
+				<ul data-role="listview" data-inset="false">
+					<li>
+						<label for="select-memotitle">메모명</label>
+						<input type="text" name="selectmemotitle" id="select_memotitle" value="">
+					</li>
+					<li class="ui-field-contain">
+						
+						 <select multiple="multiple" data-native-menu="true" name="select_participant_1" id="select_participant_1"
+							>												
+							</select>
+						</li>
+						<li class="ui-field-contain">
+						<h1>
+							<b>업무 완성도</b>
+						</h1>
+						<select id="memoFinish" class = "finish1" name = "memoFinishname" data-role="none">
+							<option value="ing">진행 중</option>
+							<option value="finish">완료</option>
+						</select>
+					</li>
+						<li class="ui-field-contain">
+							<label for="modify_date">마감일</label>
+							<input type="date" name="modify_date1" id="modify_date" data-clear-btn="true" data-theme="a">
+						</li>
+							
+						<li class="ui-field-contain">
+							<label for="textarea2">할 일</label>
+							<textarea cols="40" rows="8" name="textarea_2" id="textarea2"></textarea>
+						</li>
+						        
+						<li class="ui-field-contain ui-grid-a">
+							
+							<div class="ui-block-a"><button type="submit" class="ui-btn ui-corner-all ui-btn-a" onclick="memomodifyfunc();" rel="external">확 인</button></div>
+							<div class="ui-block-b"><button type="reset" class="ui-btn ui-corner-all ui-btn-a">초기화</button></div>
+
+						</li>
+					</ul>
+				</form>
+			</div>
+
+		</body>
+		</html>
