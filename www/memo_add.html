@@ -1,0 +1,68 @@
+<!DOCTYPE html> 
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width; initial-scale=1.0">
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+	<link rel="stylesheet" href="css/themes/MangoApp_theme.css" />
+	<link rel="stylesheet" href="css/themes/MangoApp_theme.min.css" />
+	<link rel="stylesheet" href="css/icon.css" />
+	<script src="http://code.jquery.com/jquery-1.11.2.min.js"></script>
+	<script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+</head> 
+<body> 
+
+	<div data-role="page" id="page">
+
+		<div data-role="header" data-position="fixed">
+			<h4>라벨 제목</h4>
+			<a href="#" data-rel="back" data-icon="arrow-l" class="ui-btn-left" data-rel="back">뒤로</a>
+			<a href="#" data-rel="back" data-icon="arrow-l" class="ui-btn-right">수정</a>
+		</div>
+
+		<div data-role="content">	
+			
+			<div><h2><b>메모 제목</b></h2></div>
+
+			<form>
+				<ul data-role="listview" data-inset="false">
+					<li class="ui-field-contain">
+            			<label for="select-category" class="select">분류</label>
+            			<select name="select-category" id="select-category">
+            			  	<option value="Todo">해야 할 일</option>
+           				    <option value="Doing">하고 있는 일</option>
+        			    </select>
+        			</li>
+					<li class="ui-field-contain">
+						<label for="select-participant" class="select">참여자</label>
+						<select multiple="multiple" data-native-menu="false" name="select-choice-1" id="select-participant">
+							<option value="">참여자 선택</option>
+							<option value="1">유동훈</option>
+							<option value="2">윤성빈</soption>
+							</select>
+						</li>
+
+						<li class="ui-field-contain">
+							<label for="textarea2">할 일</label>
+							<textarea cols="40" rows="8" name="textarea2" id="textarea2"></textarea>
+						</li>
+						       
+						       
+						<li class="ui-body ui-body-b">
+							<fieldset class="ui-grid-a">
+								<div class="ui-block-a"><button type="submit" class="ui-btn ui-corner-all ui-btn-a">확 인</button></div>
+								<div class="ui-block-b"><button type="submit" class="ui-btn ui-corner-all ui-btn-a">초기화</button></div>
+							</fieldset>
+						</li>
+					</ul>
+				</form>
+			</div>
+
+			<div data-role="footer">
+				<h4>댓글</h4>
+
+			</div>
+		</div>
+
+	</body>
+	</html>

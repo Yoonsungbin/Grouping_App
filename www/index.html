@@ -1,0 +1,70 @@
+<!DOCTYPE html> 
+<html manifest="cache.manifest">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, user-scalable=no">
+  <title>MangoMango</title>
+  <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+  <link rel="stylesheet" href="css/themes/MangoApp_theme.css" />
+  <link rel="stylesheet" href="css/themes/MangoApp_theme.min.css" />
+  <script src="http://code.jquery.com/jquery-1.11.2.min.js"></script>
+  <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+  </script>
+</head> 
+<body> 
+
+  <div data-role="page" id="login" data-theme="a">
+    <div data-role="header">
+      <h1>Mango</h1>
+    </div>
+    <div data-role="content" align="center">
+      <img src="./img/loginlogo.jpg"   height=120 width=auto><p>
+      <input type="text" name="User_Email" placeholder="아이디" id ="User_Email"><p>
+      <input type="password" name="User_Pass" placeholder="비밀번호"id ="User_Pass"><p>
+      <input type="submit" value="log in"id ="getResult">
+      <a href="memberform.html" rel="external">회원가입</a><p>
+      <a href="tab_memo.html" rel="external">pw찾기</a>
+    </div>
+
+    <script type="text/javascript">
+      console.log('start');
+      $('#getResult').click( function() {
+        console.log('connect');
+        $('#result').html('');
+        $.ajax({
+          url:'http://54.65.21.180:8080/add',
+          dataType:'json',
+          type:'POST',
+          data:{'User_Email':$('#User_Email').val(),
+          'User_Pass':$('#User_Pass').val()},
+          success:function(result){
+            var count =0;
+            $.each(result, function (k, v){
+              console.log('start:');
+              if(count == 0 ){
+                localStorage.setItem("User_Email",v);
+                console.log(v);
+              } else if( count == 1){
+                localStorage.setItem("User_Name",v);
+                console.log(v);
+              } else if (count ==2){
+                localStorage.setItem("User_Pass",v);
+                console.log(v);
+              } else if( count ==3){
+                  localStorage.setItem("_Id", v);
+                console.log(v);
+              }
+              count++;
+          });
+            location.href = 'project_select.html';
+            $('#output').val(result);
+            $('#result').html(result);
+            if(result['result']==true){
+              $('#result').html(result['msg']);
+            }
+          }
+        });
+      })
+    </script>
+  </body>
+  </html>
