@@ -13,8 +13,6 @@
 	src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
 
 <script type="text/javascript">
-	
-
 	console.log('project select');
 	var Project_Name = new Array();
 	var Project_Id = [];
@@ -24,6 +22,7 @@
 				dataType : 'json',
 				type : 'POST',
 				data : {
+					'User_Id' : localStorage.setItem('User_Id'),
 					'User_Email' : localStorage.getItem('User_Email'),
 					'User_Pass' : localStorage.getItem('User_Pass')
 				},
@@ -46,10 +45,7 @@
 						});
 					}
 					var text = "";
-					$
-							.each(
-									list,
-									function(index, item) {
+					$.each(list,function(index, item) {
 										text += "<li><br><a class='prj' id="+item.Project_Id+" href='' rel='external'><br>"
 												+ item.title + "<br></a></li>";
 										

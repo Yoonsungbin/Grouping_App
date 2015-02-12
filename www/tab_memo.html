@@ -32,6 +32,7 @@
 		});
 	</script>
 	<script type="text/javascript">
+	//채팅페이지
 		var socket = io.connect('http://54.65.21.180:8080');
 		var User_Name = localStorage.getItem('User_Name');
 		var Project_Id = localStorage.getItem('Project_Id');
@@ -194,7 +195,7 @@ socket.on('putgreet', function(msg) {
 
 });
 
-
+//tab memo html 프로젝트 멤버 추가하는 함수
 function addprojectmember() {
 	$.ajax({
 		url : 'http://54.65.21.180:8080/addprojectmember',
@@ -221,7 +222,7 @@ function addprojectmember() {
 <script>
 
 
-
+//memo show 메모창에서 메모데이터 보여주는 함수
 
 	$.ajax({
 		url : 'http://54.65.21.180:8080/appviewmemo',
@@ -273,7 +274,7 @@ function addprojectmember() {
 		}
 
 	});
-
+//tab memo html 메모 클릭햇을때
 $(document).on("click", ".memolist", function() {
 	var tempid = $(this).parent().attr('id');
 	console.log('hi');
@@ -284,7 +285,7 @@ $(document).on("click", ".memolist", function() {
 	location.replace('memo_show.html');
 });
 
-
+//tab memo html  삭제클릭햇을때
 $(document).on("click", ".deletememo", function() {
 	var tempid = $(this).parent().attr('id');
 	localStorage.setItem('Select_Project_Id',  $(this).parent().attr('id'));
@@ -295,7 +296,7 @@ $(document).on("click", ".deletememo", function() {
 
 </script>
 <script>
-	
+	//메모추가함수 memo showhtml
 	function memoaddfunc() {
 		var Work_Person = new Array();
 		var sel = document.getElementsByTagName('select').item(0);
@@ -326,7 +327,7 @@ $(document).on("click", ".deletememo", function() {
 		});
 		location.replace('tab_memo.html');
 	}
-
+//momo show html 참여자 목록보여주기
 	function selectmember() {
 		console.log('selectmember 시작');
 		console.log(localStorage.getItem('Project_Id'));
@@ -370,6 +371,7 @@ $(document).on("click", ".deletememo", function() {
 		}
 	});
 }
+//tab memo html  삭제클릭햇을떄 실행되는함수
 function deletememo(){
 	var deleteid = localStorage.getItem('Select_Project_Id');
 	$.ajax({
