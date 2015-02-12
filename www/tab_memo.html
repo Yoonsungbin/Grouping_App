@@ -34,17 +34,16 @@
 	</script>
 
 	<script>
-	// tab_schedule
-	$(document).one('pageshow','#tab_schedule',function(e,data){    
-		var date = new Date();
-		var d = date.getDate();
-		var m = date.getMonth();
-		var y = date.getFullYear();   
-		$('#calendar').fullCalendar({
-			editable: true,
-			startEditable: true,
-			durationEditable: true,
-			resizable: true,
+		$(document).one('pageshow','#tab_schedule',function(e,data){    
+			var date = new Date();
+			var d = date.getDate();
+			var m = date.getMonth();
+			var y = date.getFullYear();   
+			$('#calendar').fullCalendar({
+				editable: true,
+				startEditable: true,
+				durationEditable: true,
+				resizable: true,
             //disableDragging: true,      
             events: function(start, end, callback) {
             	$.ajax({
@@ -77,7 +76,6 @@
             			callback(events);
             		}
             	});
-
 },
 eventDrop: function(event){
 	console.log(event.title); 
@@ -92,7 +90,7 @@ eventDrop: function(event){
 	var Dday = dy+'-'+dm+'-'+dd;
 
 	$.ajax({
-		url: 'http://54.65.21.180/Calendar_Modify',
+		url: 'http://54.65.21.180:8080/Calendar_Modify',
 		dataType: 'json',
 		type : 'POST',
 		data: {          
@@ -119,7 +117,7 @@ eventResize:function(event){
 	var Dday = dy+'-'+dm+'-'+dd;
 
 	$.ajax({
-		url: 'http://54.65.21.180/Calendar_Modify',
+		url: 'http://54.65.21.180:8080/Calendar_Modify',
 		dataType: 'json',
 		type : 'POST',
 		data: {          
@@ -134,6 +132,8 @@ eventResize:function(event){
 
 }
 
+
+
 });
 });
 
@@ -141,12 +141,14 @@ eventResize:function(event){
 
 
 
+
+
+
 <script type="text/javascript">
-	//채팅페이지
 	var socket = io.connect('http://54.65.21.180:8080');
 	var User_Name = localStorage.getItem('User_Name');
 	var Project_Id = localStorage.getItem('Project_Id');
-	var Project_Index = localStorage.getItem('Project_Index');
+	//ar Project_Index = localStorage.getItem('Project_Index');
 	var Time = new Date();
 	var lastdate = '';
 
@@ -157,61 +159,66 @@ eventResize:function(event){
 	socket.emit('getgreet', User_Name + '님이 접속하셨습니다.');
 	console.log('chat join');
 	socket
-	.on('connect',function() {
-		$('form').submit(
-			function() {
-				var message = $('#m').val();
-				var current_time = Time.getHours() + ":"
-				+ Time.getMinutes();
-				socket.emit('getmessage', {
-					message : message,
-					User_Name : User_Name,
-					Time : current_time
+	.on(
+		'connect',
+		function() {
+			$('form').submit(
+				function() {
+					var message = $('#m').val();
+					var current_time = Time.getHours() + ":"
+					+ Time.getMinutes();
+					socket.emit('getmessage', {
+						message : message,
+						User_Name : User_Name,
+						Time : current_time
+					});
+					$('#m').val('');
+					return false;
 				});
-				$('#m').val('');
-				return false;
-			});
-		socket.on('premessage',function(data) {
-			var text = '';
-			if(data.NewJoin == User_Name){
-				if (data.Member == User_Name) {
-					text += "<div>";
-					text += "<span style='display:inline-block; .display:inline; float: right; border: 1px solid blue; margin:auto width:auto'>"
-					+ data.message
-					+ "</span>";
-					text += "<span style='display:inline-block; .display:inline; float: right; margin:auto width:auto'><sub>"
-					+ data.Time
-					+ "</sub></span>";
-					text += "</div><p>&nbsp;</p>";
-					$('#messages').append(text);
-				} else {
-					var text = '';
+			socket.on('premessage',function(data) {
 
-					text += "<div>";
-					text += "<span style='display:inline-block; .display:inline; float: left; border: 1px solid red; margin:auto width:auto'>"
-					+ data.Member
-					+ ':'
-					+ "</span>";
-					text += "<span style='display:inline-block; .display:inline; float: left; border: 1px solid red; margin:auto width:auto'>"
-					+ data.message
-					+ "</span>";
+				var text = '';
+				if(data.NewJoin == User_Name){
+					if (data.Member == User_Name) {
+						text += "<div>";
 
-					text += "<span style='display:inline-block; .display:inline; float: left; margin:auto width:auto'><sub>"
-					+ data.Time
-					+ "</sub></span>";
-					text += "</div><p>&nbsp;</p>";
-					$('#messages').append(text);
+						text += "<span style='display:inline-block; .display:inline; float: right; border: 1px solid blue; margin:auto width:auto'>"
+						+ data.message
+						+ "</span>";
+						text += "<span style='display:inline-block; .display:inline; float: right; margin:auto width:auto'><sub>"
+						+ data.Time
+						+ "</sub></span>";
+						text += "</div><p>&nbsp;</p>";
+						$('#messages').append(text);
+					} else {
+						var text = '';
+
+						text += "<div>";
+						text += "<span style='display:inline-block; .display:inline; float: left; border: 1px solid red; margin:auto width:auto'>"
+						+ data.Member
+						+ ':'
+						+ "</span>";
+						text += "<span style='display:inline-block; .display:inline; float: left; border: 1px solid red; margin:auto width:auto'>"
+						+ data.message
+						+ "</span>";
+
+						text += "<span style='display:inline-block; .display:inline; float: left; margin:auto width:auto'><sub>"
+						+ data.Time
+						+ "</sub></span>";
+						text += "</div><p>&nbsp;</p>";
+						$('#messages').append(text);
+					}
 				}
-			}
-			var el = document
-			.getElementById('messages');
-			el.scrollIntoView(false);
-		});
+				var el = document
+				.getElementById('messages');
+				el.scrollIntoView(false);
+			});
 socket.on('putgreet', function(msg) {
 	$('#messages').append($('<h4 align="center">').text(msg));
 });
 
-						 //접속한 사람을 알기위한 함수 
+						//접속유저 보이는 곳
+					 //접속한 사람을 알기위한 함수 
 						 socket.on('Connect_Member', function(data){                
 						 	var Connect_List = [];
 						 	var Connect_Dataform = JSON.stringify(data);
@@ -289,7 +296,6 @@ socket.on('putgreet', function(msg) {
 						 });
 });
 
-//tab memo html 프로젝트 멤버 추가하는 함수
 function addprojectmember() {
 	$.ajax({
 		url : 'http://54.65.21.180:8080/addprojectmember',
@@ -303,68 +309,72 @@ function addprojectmember() {
 			//프로젝트 내용
 		},
 		success : function(result) {
+
 			console.log('success');
+
 			//$('#add_member').popup("close");
 			$('#add_member').popup("close");
 		}
 	});
 }
 </script>
+
 <script>
 
-//memo show 메모창에서 메모데이터 보여주는 함수
 
-$.ajax({
-	url : 'http://54.65.21.180:8080/appviewmemo',
-	dataType : 'json',
-	type : 'POST',
-	data : {
-		'Project_Id' : localStorage.getItem('Project_Id'),
-		'User_Name' : localStorage.getItem('User_Name')
-	},
-	success : function(result) {
-		var Work_Name = new Array();
-		var Work_DueDate = new Array();
-		var Work_Id = new Array();
-		var memodataform = JSON.stringify(result);
-		var memotemp = JSON.parse(memodataform);
-		console.log(memotemp);
-		console.log(memodataform);
-		console.log('momo count : ' + memotemp.Work_Length);
-		var memocount = memotemp.Work_Length;
-		for (var i = 0; i < memocount; i++) {
-			Work_Id[i] = memotemp.Work_Id[i];
-			Work_Name[i] = memotemp.Work_Name[i];
-			if(memotemp.Work_DueDate[i]==null){
-				Work_DueDate[i] = 0;
 
-			} else {
-				Work_DueDate[i] = memotemp.Work_DueDate[i];
+
+	$.ajax({
+		url : 'http://54.65.21.180:8080/appviewmemo',
+		dataType : 'json',
+		type : 'POST',
+		data : {
+			'Project_Id' : localStorage.getItem('Project_Id'),
+			'User_Name' : localStorage.getItem('User_Name')
+		},
+		success : function(result) {
+			var Work_Name = new Array();
+			var Work_DueDate = new Array();
+			var Work_Id = new Array();
+			var memodataform = JSON.stringify(result);
+			var memotemp = JSON.parse(memodataform);
+			console.log(memotemp);
+			console.log(memodataform);
+			console.log('momo count : ' + memotemp.Work_Length);
+			var memocount = memotemp.Work_Length;
+			for (var i = 0; i < memocount; i++) {
+				Work_Id[i] = memotemp.Work_Id[i];
+				Work_Name[i] = memotemp.Work_Name[i];
+				if(memotemp.Work_DueDate[i]==null){
+					Work_DueDate[i] = 0;
+
+				} else {
+					Work_DueDate[i] = memotemp.Work_DueDate[i];
+				}
+				console.log(Work_Id[i]);
+				console.log(Work_Name[i]);
+				console.log(Work_DueDate[i]);
 			}
-			console.log(Work_Id[i]);
-			console.log(Work_Name[i]);
-			console.log(Work_DueDate[i]);
-		}
-		var memolist = [];
-		for (var i = 0; i < memocount; i++) {
-			memolist.push({
-				'Work_Name' : Work_Name[i],
-				'Work_Id' :Work_Id[i],
-				'Work_DueDate' :  Work_DueDate[i]
+			var memolist = [];
+			for (var i = 0; i < memocount; i++) {
+				memolist.push({
+					'Work_Name' : Work_Name[i],
+					'Work_Id' :Work_Id[i],
+					'Work_DueDate' :  Work_DueDate[i]
+				});
+			}
+			var text = "";
+			
+			$.each(memolist, function(index,item) {
+				text += "<li id ='"+item.Work_Id+"' class='ui-state-default'>"+"<a class='memolist' href='' rel='external'>"+"<span class='ui-icon ui-icon-bars ui-btn-icon-left'></span>"+"<span class='ui-li-count'>D-Day:"+item.Work_DueDate+"</span>"+ item.Work_Name+ "<a href='' class ='deletememo' data-rel='popup' data-position-to='window' data-transition='pop'>삭제</a></li>"			
 			});
+
+			$('#pre_memolist').append(text).listview('refresh');
+			console.log('출력 완료');
 		}
-		var text = "";
 
-		$.each(memolist, function(index,item) {
-			text += "<li id ='"+item.Work_Id+"' class='ui-state-default'>"+"<a class='memolist' href='' rel='external'>"+"<span class='ui-icon ui-icon-bars ui-btn-icon-left'></span>"+"<span class='ui-li-count'>D-Day:"+item.Work_DueDate+"</span>"+ item.Work_Name+ "<a href='' class ='deletememo' data-rel='popup' data-position-to='window' data-transition='pop'>삭제</a></li>"			
-		});
+	});
 
-		$('#pre_memolist').append(text).listview('refresh');
-		console.log('출력 완료');
-	}
-
-});
-//tab memo html 메모 클릭햇을때
 $(document).on("click", ".memolist", function() {
 	var tempid = $(this).parent().attr('id');
 	console.log('hi');
@@ -375,17 +385,18 @@ $(document).on("click", ".memolist", function() {
 	location.replace('memo_show.html');
 });
 
-//tab memo html  삭제클릭햇을때
+
 $(document).on("click", ".deletememo", function() {
 	var tempid = $(this).parent().attr('id');
 	localStorage.setItem('Select_Project_Id',  $(this).parent().attr('id'));
 	$('#deletememo').popup("open");
 });
 
-</script>
 
+
+</script>
 <script>
-	//메모추가함수 memo showhtml
+	
 	function memoaddfunc() {
 		var Work_Person = new Array();
 		var sel = document.getElementsByTagName('select').item(0);
@@ -417,72 +428,75 @@ $(document).on("click", ".deletememo", function() {
 		});
 		location.replace('tab_memo.html');
 	}
-//momo show html 참여자 목록보여주기
-function selectmember() {
-	console.log('selectmember 시작');
-	console.log(localStorage.getItem('Project_Id'));
-	$.ajax({
-		url : 'http://54.65.21.180:8080/appgetprojectmember',
-		dataType : 'json',
-		type : 'POST',
-		data : {
-			'Project_Id' : localStorage.getItem('Project_Id')
-		},
-		success : function(result) {
-			var Project_Member_Name = [];
-			var Member_Id = [];
-			var dataform = JSON.stringify(result);
-			var temp = JSON.parse(dataform);
-			console.log(temp[0]);
-			var count = temp[0].In_Member.length;
-			var list = [];   
-			console.log(count);
-			console.log('success');             
-			for (var i = 0; i < count; i++) {
-				list.push({'user': temp[0].In_Member[i], 'id':temp[0]._id[i]});      
+
+	function selectmember() {
+		console.log('selectmember 시작');
+		console.log(localStorage.getItem('Project_Id'));
+		$.ajax({
+			url : 'http://54.65.21.180:8080/appgetprojectmember',
+			dataType : 'json',
+			type : 'POST',
+			data : {
+				'Project_Id' : localStorage.getItem('Project_Id')
+			},
+			success : function(result) {
+				var Project_Member_Name = [];
+				var Member_Id = [];
+				var dataform = JSON.stringify(result);
+				var temp = JSON.parse(dataform);
+				console.log(temp[0]);
+				var count = temp[0].In_Member.length;
+				var list = [];	
+
+
+				console.log(count);
+
+				for (var i = 0; i < count; i++) {
+					list.push({'user': temp[0].In_Member[i], 'id':temp[0]._id[i]});		
+				}
+
+				var index = 0;
+
+				var text = "";
+				$.each(list, function(index, item) {
+					text += "<option value="+item.id+">" + item.user
+					+ "</option>";
+				});			
+				$('#select-participant').empty();
+				$('#select-participant').listview().listview('refresh');
+				$('#select-participant').append(text).listview('refresh');
+				text = "";
+				index = 0;
+				list = [];
 			}
+		});
+	}
+	function deletememo(){
+		var deleteid = localStorage.getItem('Select_Project_Id');
+		$.ajax({
+			url : 'http://54.65.21.180:8080/appdeletememo',
+			dataType : 'json',
+			type : 'POST',
+			data : {'Delete_MemoId' : deleteid},
+			success : function(data) {	
+				location.replace('tab_memo.html');											
+			}
+		});	
+	}
 
-			var index = 0;
-			var text = "";
-			$.each(list, function(index, item) {
-				text += "<option value="+item.id+">" + item.user
-				+ "</option>";
-			});         
-			$('#select-participant').empty();
-			$('#select-participant').listview().listview('refresh');
-			$('#select-participant').append(text).listview('refresh');
-			text = "";
-			index = 0;
-			list = [];
-		}
-	});
-}
-//tab memo html  삭제클릭햇을떄 실행되는함수
-function deletememo(){
-	var deleteid = localStorage.getItem('Select_Project_Id');
-	$.ajax({
-		url : 'http://54.65.21.180:8080/appdeletememo',
-		dataType : 'json',
-		type : 'POST',
-		data : {'Delete_MemoId' : deleteid},
-		success : function(data) {	
-			location.replace('tab_memo.html');											
-		}
-	});	
-}
+	function mypagefunc(){
+		location.replace('mypage.html');
+	}
+	function project_selectfunc(){
+		location.replace('project_select.html');
+	}
+	function App_communityfunc(){
+		location.replace('App_community.html');
+	}
+	function logout(){
+		location.replace('index.html');
+	}
 
-function mypagefunc(){
-	location.replace('mypage.html');
-}
-function project_selectfunc(){
-	location.replace('project_select.html');
-}
-function App_communityfunc(){
-	location.replace('App_community.html');
-}
-function logout(){
-	location.replace('index.html');
-}
 
 </script>
 </head>
@@ -506,7 +520,7 @@ function logout(){
 				<li><a href="#" data-rel="close">닫기</a></li>
 			</ul>
 		</div>
-
+		
 		<div data-role="popup" id="add_member" data-theme="a" class="ui-corner-all">
 			<form>
 				<div style="padding:10px 20px;">
@@ -528,7 +542,7 @@ function logout(){
 		<div data-role="navbar">
 			<ul>
 				<li><a href="#tab_memo" class="ui-btn-active ui-state-persist ui-btn ui-nodisc-icon ui-icon-memo ui-btn-icon-top">업무</a></li>
-				<li><a href="#tab_schedule"
+				<li><a href="#tab_schedule" 
 					class="ui-btn ui-nodisc-icon ui-icon-schedule ui-btn-icon-top ">일정</a></li>
 					<li><a href="#tab_addfunc"
 						class="ui-btn ui-nodisc-icon ui-icon-addfunc ui-btn-icon-top">부가기능</a></li>
@@ -587,6 +601,7 @@ function logout(){
 
 				</div>
 				<!-- footer -->
+
 				<div data-role="popup" id="addmemo" data-theme="a"
 				class="ui-corner-all">
 				<form>
@@ -602,7 +617,7 @@ function logout(){
 						onclick="selectmember();"></select> 
 						<label for="memo_date_start">시작일</label> 
 						<input type="date" name="memo_date_start" id="m_date_start" data-clear-btn="true" data-theme="a">
-
+						
 						<label for="memo_date_end">마감일</label> 
 						<input type="date" name="memo_date_end" id="m_date_end" data-clear-btn="true" data-theme="a">
 
@@ -662,19 +677,14 @@ function logout(){
 							</ul>
 						</div>
 					</div>
-
 					<div data-role="content" data-theme="a">
-						
+
 						<div id='calendar' style="width:100%;"></div>
 					</div>
 					<div data-role="footer" data-position="fixed" data-tap-toggle="false">
 						<h4>페이지 바닥글</h4>
 					</div>
-				</div>
-
-
-				
-				<!-- *************************************************************************************** -->
+				</div> <!-- *************************************************************************************** -->
 				<!-- **************************************부가기능 창************************************** -->
 				<!-- *************************************************************************************** -->
 
@@ -703,7 +713,7 @@ function logout(){
 							class="ui-btn ui-nodisc-icon ui-icon-memo ui-btn-icon-top">업무</a></li>
 							<li><a href="#tab_schedule"
 								class="ui-btn ui-nodisc-icon ui-icon-schedule ui-btn-icon-top ">일정</a></li>
-								<li><a href="#tab_addfunc" 
+								<li><a href="#tab_addfunc"
 									class="ui-btn-active ui-state-persist ui-btn ui-nodisc-icon ui-icon-addfunc ui-btn-icon-top">부가기능</a></li>
 									<li><a href="#tab_chat"
 										class="ui-btn ui-nodisc-icon ui-icon-chat ui-btn-icon-top">채팅</a></li>
