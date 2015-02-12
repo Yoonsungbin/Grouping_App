@@ -15,7 +15,6 @@
 	<script src="jquery.ui.touch-punch.min.js"></script>
 	<script type='text/javascript' src='http://arshaw.com/js/fullcalendar-1.5.4/fullcalendar/fullcalendar.min.js'></script>
 	<link rel='stylesheet' type='text/css' href='http://arshaw.com/js/fullcalendar-1.5.4/fullcalendar/fullcalendar.css' />
-
 	<script>
 		$.mobile.defaultPageTransition = 'none'
 		$.mobile.defaultDialogTransition = 'none'
@@ -33,7 +32,116 @@
 			});
 		});
 	</script>
-	<script type="text/javascript">
+
+	<script>
+	// tab_schedule
+	$(document).one('pageshow','#tab_schedule',function(e,data){    
+		var date = new Date();
+		var d = date.getDate();
+		var m = date.getMonth();
+		var y = date.getFullYear();   
+		$('#calendar').fullCalendar({
+			editable: true,
+			startEditable: true,
+			durationEditable: true,
+			resizable: true,
+            //disableDragging: true,      
+            events: function(start, end, callback) {
+            	$.ajax({
+            		url: 'http://54.65.21.180:8080/Calendar_Getdata',
+            		dataType: 'json',
+            		type : 'POST',
+            		data: {
+            			'Project_Id' : localStorage.getItem('Project_Id')
+            		},
+            		success: function(data, text, request) {
+            			var dataform = JSON.stringify(data);                
+            			var temp = JSON.parse(dataform);
+            			count = temp.length;                 
+            			console.log(count);
+            			console.log(data[0].Work_Name);
+            			console.log(data[0].Work_Sday);
+            			var events=[];
+            			var jsontext = new Array();                                        
+            			for(var i = 0; i< count; i++){                            
+            				var Dday = (data[i].Work_Dday).split('-');
+            				var Sday = (data[i].Work_Sday).split('-');
+            				events.push({
+            					workid : data[i]._id,
+            					title : data[i].Work_Name,
+            					start : new Date(Sday[0], Sday[1]-1, Sday[2]),
+            					end : new Date(Dday[0], Dday[1]-1, Dday[2])                        
+            				});                     
+            			}       
+            			console.log(events);                                   
+            			callback(events);
+            		}
+            	});
+
+},
+eventDrop: function(event){
+	console.log(event.title); 
+	console.log(event.workid);  
+	var sy = event.start.getUTCFullYear();
+	var sm = event.start.getUTCMonth() + 1;
+	var sd = event.start.getUTCDate();
+	var dy = event.end.getUTCFullYear();
+	var dm = event.end.getUTCMonth() + 1;
+	var dd = event.end.getUTCDate()+1;               
+	var Sday = sy+'-'+sm+'-'+sd;
+	var Dday = dy+'-'+dm+'-'+dd;
+
+	$.ajax({
+		url: 'http://54.65.21.180/Calendar_Modify',
+		dataType: 'json',
+		type : 'POST',
+		data: {          
+			'Work_Id' : event.workid,
+			'Work_Sday':Sday,
+			'Work_Dday':Dday 
+		},
+		success: function(result) {
+			console.log('업데이트 완료')
+		}
+	}); 
+
+},
+eventResize:function(event){
+	console.log(event.title); 
+	console.log(event.workid);  
+	var sy = event.start.getUTCFullYear();
+	var sm = event.start.getUTCMonth() + 1;
+	var sd = event.start.getUTCDate();
+	var dy = event.end.getUTCFullYear();
+	var dm = event.end.getUTCMonth() + 1;
+	var dd = event.end.getUTCDate()+1;               
+	var Sday = sy+'-'+sm+'-'+sd;
+	var Dday = dy+'-'+dm+'-'+dd;
+
+	$.ajax({
+		url: 'http://54.65.21.180/Calendar_Modify',
+		dataType: 'json',
+		type : 'POST',
+		data: {          
+			'Work_Id' : event.workid,
+			'Work_Sday':Sday,
+			'Work_Dday':Dday 
+		},
+		success: function(result) {
+			console.log('업데이트 완료')
+		}
+	}); 
+
+}
+
+});
+});
+
+</script>
+
+
+
+<script type="text/javascript">
 	//채팅페이지
 	var socket = io.connect('http://54.65.21.180:8080');
 	var User_Name = localStorage.getItem('User_Name');
@@ -103,7 +211,6 @@ socket.on('putgreet', function(msg) {
 	$('#messages').append($('<h4 align="center">').text(msg));
 });
 
-
 						 //접속한 사람을 알기위한 함수 
 						 socket.on('Connect_Member', function(data){                
 						 	var Connect_List = [];
@@ -135,7 +242,6 @@ socket.on('putgreet', function(msg) {
 						 		DisConnect_List.push({'user' : DisConnect[0].Access_Member[i]});
 						 	}
 
-
 						 	$.each(DisConnect_List, function(index, item){
 						 		DisConnect_User += "<li>" + "●" + item.user
 						 		+ "<br></li>";
@@ -149,9 +255,7 @@ socket.on('putgreet', function(msg) {
 
 						 });
 
-
 						 socket.on('putmessage',	function(data) {
-
 						 	if (data.User_Name == User_Name) {
 						 		var text = '';
 						 		text += "<div>";
@@ -178,13 +282,11 @@ socket.on('putgreet', function(msg) {
 						 		+ "</sub></span>";
 						 		text += "</div><p>&nbsp;</p>";
 						 		$('#messages').append(text);
-
 						 	}
 						 	var el = document
 						 	.getElementById('messages');
 						 	el.scrollIntoView(false);
 						 });
-
 });
 
 //tab memo html 프로젝트 멤버 추가하는 함수
@@ -201,18 +303,14 @@ function addprojectmember() {
 			//프로젝트 내용
 		},
 		success : function(result) {
-
 			console.log('success');
-
 			//$('#add_member').popup("close");
 			$('#add_member').popup("close");
 		}
 	});
 }
 </script>
-
 <script>
-
 
 //memo show 메모창에서 메모데이터 보여주는 함수
 
@@ -284,8 +382,6 @@ $(document).on("click", ".deletememo", function() {
 	$('#deletememo').popup("open");
 });
 
-
-
 </script>
 
 <script>
@@ -347,7 +443,6 @@ function selectmember() {
 			}
 
 			var index = 0;
-
 			var text = "";
 			$.each(list, function(index, item) {
 				text += "<option value="+item.id+">" + item.user
@@ -388,86 +483,6 @@ function App_communityfunc(){
 function logout(){
 	location.replace('index.html');
 }
-
-
-</script>
-
-<!-- 달력 -->
-<script>
-	// $(document).on('pageshow','#tab_schedule',function(e,data){    
-		$('document').ready(function(){
-		var date = new Date();
-		var d = date.getDate();
-		var m = date.getMonth();
-		var y = date.getFullYear();   
-		$('#calendar').fullCalendar({
-			editable: true,
-			startEditable: true,
-			durationEditable: true,
-            disableDragging: true,      
-            events: function(start, end, callback) {
-            	$.ajax({
-            		url: 'http://54.65.21.180:8080/Calendar_Getdata',
-            		dataType: 'json',
-            		type : 'POST',
-            		data: {
-            			'Project_Id' : localStorage.getItem('Project_Id')
-            		},
-            		success: function(data, text, request) {
-            			var dataform = JSON.stringify(data);                
-            			var temp = JSON.parse(dataform);
-            			count = temp.length;                 
-            			console.log(count);
-            			console.log(data[0].Work_Name);
-            			console.log(data[0].Work_Sday);
-            			var events=[];
-            			var jsontext = new Array();                                        
-            			for(var i = 0; i< count; i++){                            
-            				var Dday = (data[i].Work_Dday).split('-');
-            				var Sday = (data[i].Work_Sday).split('-');
-            				events.push({
-            					workid : data[i]._id,
-            					title : data[i].Work_Name,
-            					start : new Date(Sday[0], Sday[1]-1, Sday[2]),
-            					end : new Date(Dday[0], Dday[1]-1, Dday[2])                        
-            				});                     
-            			}       
-            			console.log(events);                                   
-            			callback(events);
-            		}
-            	});
-},
-eventDrop: function(event){
-	console.log(event.title); 
-	console.log(event.workid);  
-	var sy = event.start.getUTCFullYear();
-	var sm = event.start.getUTCMonth() + 1;
-	var sd = event.start.getUTCDate();
-	var dy = event.end.getUTCFullYear();
-	var dm = event.end.getUTCMonth() + 1;
-	var dd = event.end.getUTCDate()+1;               
-	var Sday = sy+'-'+sm+'-'+sd;
-	var Dday = dy+'-'+dm+'-'+dd;
-
-	$.ajax({
-		url: 'http://54.65.21.180:8080/Calendar_Modify',
-		dataType: 'json',
-		type : 'POST',
-		data: {          
-			'Work_Id' : event.workid,
-			'Work_Sday':Sday,
-			'Work_Dday':Dday 
-		},
-		success: function(result) {
-			console.log('업데이트 완료')
-		}
-	}); 
-
-}
-
-
-});
-});
 
 </script>
 </head>
@@ -648,10 +663,17 @@ eventDrop: function(event){
 						</div>
 					</div>
 
-					<div data-role="content">       
+					<div data-role="content" data-theme="a">
+						
 						<div id='calendar' style="width:100%;"></div>
-					</div><!-- /content -->
-				</div> 
+					</div>
+					<div data-role="footer" data-position="fixed" data-tap-toggle="false">
+						<h4>페이지 바닥글</h4>
+					</div>
+				</div>
+
+
+				
 				<!-- *************************************************************************************** -->
 				<!-- **************************************부가기능 창************************************** -->
 				<!-- *************************************************************************************** -->
