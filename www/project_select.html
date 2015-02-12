@@ -22,7 +22,7 @@
 				dataType : 'json',
 				type : 'POST',
 				data : {
-					'User_Id' : localStorage.setItem('User_Id'),
+					'User_Id' : localStorage.getItem('User_Id'),
 					'User_Email' : localStorage.getItem('User_Email'),
 					'User_Pass' : localStorage.getItem('User_Pass')
 				},
@@ -30,7 +30,8 @@
 					console.log('success project');
 					var dataform = JSON.stringify(result);
 					var temp = JSON.parse(dataform);
-					// console.log(temp.length);
+					console.log(temp.length);
+					console.log(temp);
 					count = temp.length;
 					for (var i = 0; i < count; i++) {
 						Project_Name[i] = temp[i].Project_Name;

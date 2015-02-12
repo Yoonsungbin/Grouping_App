@@ -329,47 +329,44 @@ $(document).on("click", ".deletememo", function() {
 	}
 //momo show html 참여자 목록보여주기
 	function selectmember() {
-		console.log('selectmember 시작');
-		console.log(localStorage.getItem('Project_Id'));
-		$.ajax({
-			url : 'http://54.65.21.180:8080/appgetprojectmember',
-			dataType : 'json',
-			type : 'POST',
-			data : {
-				'Project_Id' : localStorage.getItem('Project_Id')
-			},
-			success : function(result) {
-				var Project_Member_Name = [];
-				var Member_Id = [];
-				var dataform = JSON.stringify(result);
-				var temp = JSON.parse(dataform);
-				count = temp.length;
-				for (var i = 0; i < count; i++) {
-				//console.log(temp[i].Member_Name);
-				Project_Member_Name[i] = temp[i].Member_Name;
-				Member_Id[i] = temp[i].Member_Id;
-			}
-			var list = [];
-			var index = 0;
-			for (var i = 0; i < count; i++) {
-				list.push({
-					'title' : Project_Member_Name[i],
-					'id' : Member_Id[i]
-				});							
-			}
-			var text = "";
-			$.each(list, function(index, item) {
-				text += "<option value="+item.id+">" + item.title
-				+ "</option>";
-			});			
-			$('#select-participant').empty();
-			$('#select-participant').listview().listview('refresh');
-			$('#select-participant').append(text).listview('refresh');
-			text = "";
-			index = 0;
-			list = [];
-		}
-	});
+      console.log('selectmember 시작');
+      console.log(localStorage.getItem('Project_Id'));
+      $.ajax({
+         url : 'http://54.65.21.180:8080/appgetprojectmember',
+         dataType : 'json',
+         type : 'POST',
+         data : {
+            'Project_Id' : localStorage.getItem('Project_Id')
+         },
+         success : function(result) {
+            var Project_Member_Name = [];
+            var Member_Id = [];
+            var dataform = JSON.stringify(result);
+            var temp = JSON.parse(dataform);
+            console.log(temp[0]);
+            var count = temp[0].In_Member.length;
+            var list = [];   
+            console.log(count);
+     		console.log('success');             
+            for (var i = 0; i < count; i++) {
+               list.push({'user': temp[0].In_Member[i], 'id':temp[0]._id[i]});      
+         }
+      
+         var index = 0;
+         
+         var text = "";
+         $.each(list, function(index, item) {
+            text += "<option value="+item.id+">" + item.user
+            + "</option>";
+         });         
+         $('#select-participant').empty();
+         $('#select-participant').listview().listview('refresh');
+         $('#select-participant').append(text).listview('refresh');
+         text = "";
+         index = 0;
+         list = [];
+      }
+   });
 }
 //tab memo html  삭제클릭햇을떄 실행되는함수
 function deletememo(){
@@ -438,7 +435,7 @@ function logout(){
 		<div data-role="header" data-theme="a" data-position="fixed"
 		data-tap-toggle="false">
 		<a href="#memopanel" data-icon="gear">설정</a>
-		<a href="#add_member" data-rel="popup" data-position-to="window" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-user ui-btn-icon-left" data-transition="pop">멤버추가</a>
+		<a href="#add_member" data-rel="popup" data-position-to="window" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-user" data-transition="pop">멤버추가</a>
 		<h1>main화면</h1>
 		<div data-role="navbar">
 			<ul>
