@@ -13,43 +13,44 @@
 </head>
 <script>
 
-	$.ajax({
-		url : 'http://54.65.21.180:8080/appshowmemo',
-		dataType : 'json',
-		type : 'POST',
-		data :  
-		{
-			'Project_Work_Id' : localStorage.getItem('Project_Work_Id')
-		},
-		success : function(result){
-			var Work = new Array();
-			console.log('이거되냐!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!?'+result);		
-			var memodataform = JSON.stringify(result);
-			var memotemp = JSON.parse(memodataform);
-			var dataform = JSON.stringify(result.Work_Person);
-			var temp = JSON.parse(dataform);
-			var count = temp.length;	
-			var text = '';
-			
-			if(count ==0){
-				text = '';
-			}
-			else
-			{
-				for(var i = 0; i<count-1; i++){			
-					text += temp[i].User_Name + ', ';	
-				}
-				text += temp[i].User_Name;
-			}
-			
-			$('#memosubject').append(result.Work_Name);
-			$('#memoperson').append(text);
-			$('#memdetail').append(result.Work_Memo);
-			$('#memoDday').append(result.Work_Dday);
-			$('#memoFinish').append(result.Work_Finish);
-			
-		}
-	});
+	   $.ajax({
+      url : 'http://54.65.21.180:8080/appshowmemo',
+      dataType : 'json',
+      type : 'POST',
+      data :  
+      {
+         'Project_Work_Id' : localStorage.getItem('Project_Work_Id')
+      },
+      success : function(result){
+         var Work = new Array();
+         console.log('이거되냐!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!?'+result);      
+         var memodataform = JSON.stringify(result);
+         var memotemp = JSON.parse(memodataform);
+         var dataform = JSON.stringify(result.Work_Person);
+         var temp = JSON.parse(dataform);
+         var count = temp.length;   
+         var text = '';
+         
+         if(count ==0){
+            text = '';
+         }
+         else
+         {
+            for(var i = 0; i<count-1; i++){         
+               text += temp[i].User_Name + ', ';   
+            }
+            text += temp[i].User_Name;
+         }
+         
+         $('#memosubject').append(result.Work_Name);
+         $('#memoperson').append(text);
+         $('#memdetail').append(result.Work_Memo);
+         $('#memoSday').append(result.Work_Sday);
+         $('#memoDday').append(result.Work_Dday);
+         $('#memoFinish').append(result.Work_Finish);
+         
+      }
+   });
 
 
 
@@ -221,13 +222,21 @@ function gototab_memo(){
 
 						</h4>
 					</li>
-					<li class="ui-field-contain">
-						<h1>
-							<b>마감일</b>
-						</h1>
-						<h3 id="memoDday">
-						</h4>
-					</li>
+					               <li class="ui-field-contain">
+                  <h1>
+                     <b>시작일</b>
+                  </h1>
+                  <h3 id="memoSday">
+                  </h4>
+               </li>
+               
+               <li class="ui-field-contain">
+                  <h1>
+                     <b>마감일</b>
+                  </h1>
+                  <h3 id="memoDday">
+                  </h4>
+               </li>
 					
 					<li class="ui-field-contain">
 						<h1>

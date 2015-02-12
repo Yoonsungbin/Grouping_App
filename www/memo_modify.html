@@ -105,23 +105,24 @@ function memomodifyfunc(){
 		});	
 		var dataform = JSON.stringify(Work_Person);
 			console.log(dataform);
-			$.ajax({
-				url : 'http://54.65.21.180:8080/appinsertmemo',
-				dataType : 'json',
-				type : 'POST',
-				data : {
-					'Project_Work_Id' : localStorage.getItem('Project_Work_Id'),
-					'Project_Id' : localStorage.getItem('Project_Id'),
-					'Work_Name' : $('#select_memotitle').val(),
-					'Work_Memo' : $('#textarea2').val(),
-					'Work_Dday' : $('#modify_date').val(),
-					'Work_Finish' : $('#memoFinish option:selected').val(),
-					'Work_Person' : dataform
-				},
-				success : function(result) {				
-					location.replace('memo_show.html');	
-				}
-			});		
+		$.ajax({
+            url : 'http://54.65.21.180:8080/appmodifymemo',
+            dataType : 'json',
+            type : 'POST',
+            data : {
+               'Project_Work_Id' : localStorage.getItem('Project_Work_Id'),
+               'Project_Id' : localStorage.getItem('Project_Id'),
+               'Work_Name' : $('#select_memotitle').val(),
+               'Work_Memo' : $('#textarea2').val(),
+               'Work_Sday' : $('#modify_Sday').val(),
+               'Work_Dday' : $('#modify_Dday').val(),
+               'Work_Finish' : $('#memoFinish option:selected').val(),
+               'Work_Person' : dataform
+            },
+            success : function(result) {            
+               location.replace('memo_show.html');   
+            }
+         });      	
 		
 		location.replace('memo_show.html');	
 }
@@ -159,9 +160,12 @@ function memomodifyfunc(){
 						</select>
 					</li>
 						<li class="ui-field-contain">
-							<label for="modify_date">마감일</label>
-							<input type="date" name="modify_date1" id="modify_date" data-clear-btn="true" data-theme="a">
-						</li>
+                  <label for="memo_date_start">시작일</label> 
+                  <input type="date" name="modify_date_start" id="modify_Sday" data-clear-btn="true" data-theme="a">
+                  
+                     <label for="modify_date">마감일</label>
+                     <input type="date" name="modify_date1" id="modify_Dday" data-clear-btn="true" data-theme="a">
+                  </li>
 							
 						<li class="ui-field-contain">
 							<label for="textarea2">할 일</label>

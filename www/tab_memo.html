@@ -13,6 +13,8 @@
 	<script type="text/javascript" src="http://cdn.socket.io/socket.io-1.2.1.js"></script>
 	<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.min.js"></script>
 	<script src="jquery.ui.touch-punch.min.js"></script>
+	<script type='text/javascript' src='http://arshaw.com/js/fullcalendar-1.5.4/fullcalendar/fullcalendar.min.js'></script>
+	<link rel='stylesheet' type='text/css' href='http://arshaw.com/js/fullcalendar-1.5.4/fullcalendar/fullcalendar.css' />
 
 	<script>
 		$.mobile.defaultPageTransition = 'none'
@@ -285,6 +287,7 @@ $(document).on("click", ".deletememo", function() {
 
 
 </script>
+
 <script>
 	//메모추가함수 memo showhtml
 	function memoaddfunc() {
@@ -307,7 +310,8 @@ $(document).on("click", ".deletememo", function() {
 				'Project_Id' : localStorage.getItem('Project_Id'),
 				'Work_Name' : $('#m_sbj').val(),
 				'Work_Memo' : $('#m_textarea').val(),
-				'Work_Dday' : $('#m_date').val(),
+				'Work_Sday' : $('#m_date_start').val(),
+				'Work_Dday' : $('#m_date_end').val(),
 				'Work_Finish' : 'ing',
 				'Work_Person' : dataform
 			},
@@ -385,6 +389,85 @@ function logout(){
 	location.replace('index.html');
 }
 
+
+</script>
+
+<!-- 달력 -->
+<script>
+	// $(document).on('pageshow','#tab_schedule',function(e,data){    
+		$('document').ready(function(){
+		var date = new Date();
+		var d = date.getDate();
+		var m = date.getMonth();
+		var y = date.getFullYear();   
+		$('#calendar').fullCalendar({
+			editable: true,
+			startEditable: true,
+			durationEditable: true,
+            disableDragging: true,      
+            events: function(start, end, callback) {
+            	$.ajax({
+            		url: 'http://54.65.21.180:8080/Calendar_Getdata',
+            		dataType: 'json',
+            		type : 'POST',
+            		data: {
+            			'Project_Id' : localStorage.getItem('Project_Id')
+            		},
+            		success: function(data, text, request) {
+            			var dataform = JSON.stringify(data);                
+            			var temp = JSON.parse(dataform);
+            			count = temp.length;                 
+            			console.log(count);
+            			console.log(data[0].Work_Name);
+            			console.log(data[0].Work_Sday);
+            			var events=[];
+            			var jsontext = new Array();                                        
+            			for(var i = 0; i< count; i++){                            
+            				var Dday = (data[i].Work_Dday).split('-');
+            				var Sday = (data[i].Work_Sday).split('-');
+            				events.push({
+            					workid : data[i]._id,
+            					title : data[i].Work_Name,
+            					start : new Date(Sday[0], Sday[1]-1, Sday[2]),
+            					end : new Date(Dday[0], Dday[1]-1, Dday[2])                        
+            				});                     
+            			}       
+            			console.log(events);                                   
+            			callback(events);
+            		}
+            	});
+},
+eventDrop: function(event){
+	console.log(event.title); 
+	console.log(event.workid);  
+	var sy = event.start.getUTCFullYear();
+	var sm = event.start.getUTCMonth() + 1;
+	var sd = event.start.getUTCDate();
+	var dy = event.end.getUTCFullYear();
+	var dm = event.end.getUTCMonth() + 1;
+	var dd = event.end.getUTCDate()+1;               
+	var Sday = sy+'-'+sm+'-'+sd;
+	var Dday = dy+'-'+dm+'-'+dd;
+
+	$.ajax({
+		url: 'http://54.65.21.180:8080/Calendar_Modify',
+		dataType: 'json',
+		type : 'POST',
+		data: {          
+			'Work_Id' : event.workid,
+			'Work_Sday':Sday,
+			'Work_Dday':Dday 
+		},
+		success: function(result) {
+			console.log('업데이트 완료')
+		}
+	}); 
+
+}
+
+
+});
+});
 
 </script>
 </head>
@@ -489,7 +572,6 @@ function logout(){
 
 				</div>
 				<!-- footer -->
-
 				<div data-role="popup" id="addmemo" data-theme="a"
 				class="ui-corner-all">
 				<form>
@@ -502,72 +584,75 @@ function logout(){
 						<label for="select-participant" class="select">참여자</label> <select
 						multiple="multiple" data-native-menu="false"
 						name="select_choice[]" id="select-participant"
-						onclick="selectmember();">
-					</select> <label for="memo_date">마감일</label> <input type="date"
-					name="memo_date" id="m_date" data-clear-btn="true" data-theme="a">
-					<label for="memo_textarea">상세내용</label>
-					<textarea name="memo_textarea" id="m_textarea" cols="30" rows="8"
-					data-theme="a"></textarea>
+						onclick="selectmember();"></select> 
+						<label for="memo_date_start">시작일</label> 
+						<input type="date" name="memo_date_start" id="m_date_start" data-clear-btn="true" data-theme="a">
 
-					<div class="ui-grid-a">
-						<a href='' id="memoadd"
-						class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-btn-icon-left ui-icon-check ui-block-a"
-						onclick="memoaddfunc();" rel="external" style="height:40px;">추가</a>
-						<a href='' id="cancel"
-						class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-btn-icon-left ui-icon-delete ui-block-b" data-rel="back"
-						style="height:40px;">취소</a>
+						<label for="memo_date_end">마감일</label> 
+						<input type="date" name="memo_date_end" id="m_date_end" data-clear-btn="true" data-theme="a">
+
+
+						<label for="memo_textarea">상세내용</label>
+						<textarea name="memo_textarea" id="m_textarea" cols="30" rows="8"
+						data-theme="a"></textarea>
+
+						<div class="ui-grid-a">
+							<a href='' id="memoadd"
+							class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-btn-icon-left ui-icon-check ui-block-a"
+							onclick="memoaddfunc();" rel="external" style="height:40px;">추가</a>
+							<a href='' id="cancel"
+							class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-btn-icon-left ui-icon-delete ui-block-b" data-rel="back"
+							style="height:40px;">취소</a>
+						</div>
+
+
+
 					</div>
+				</form>
+			</div>
+			<!-- 메모 popup -->
 
+		</div> <!-- page --> <!-- *************************************************************************************** -->
+		<!-- **************************************스케줄 창**************************************** -->
+		<!-- *************************************************************************************** -->
+		<div data-role="page" id="tab_schedule">
 
-
-				</div>
-			</form>
+			<div data-role="panel" id="schedulepanel" data-position="left"
+			data-position-fixed="true" data-display="overlay" data-theme="a">
+			<h1>설정</h1>
+			<ul data-role="listview" data-theme="a">
+				<li><a href="mypage.html">내 정보</a></li>
+				<li><a href="project_select.html">프로젝트 선택창</a></li>
+				<li><a href="App_community.html">커뮤니티</a></li>
+				<li><a href="index.html">로그아웃</a></li>
+				<li><a href="#" data-rel="close">닫기</a></li>
+			</ul>
 		</div>
-		<!-- 메모 popup -->
+		<!-- 설정 패널창 -->
 
-	</div> <!-- page --> <!-- *************************************************************************************** -->
-	<!-- **************************************스케줄 창**************************************** -->
-	<!-- *************************************************************************************** -->
-	<div data-role="page" id="tab_schedule">
+		<div data-role="header" data-theme="a" data-position="fixed"
+		data-tap-toggle="false">
+		<a href="#schedulepanel" data-icon="gear">설정</a>
+		<h1>일 정</h1>
+		<div data-role="navbar">
+			<ul>
+				<li><a href="#tab_memo"
+					class="ui-btn ui-nodisc-icon ui-icon-memo ui-btn-icon-top">업무</a></li>
+					<li><a href="#tab_schedule"
+						class="ui-btn-active ui-state-persist ui-btn ui-nodisc-icon ui-icon-schedule ui-btn-icon-top ">일정</a></li>
+						<li><a href="#tab_addfunc"
+							class="ui-btn ui-nodisc-icon ui-icon-addfunc ui-btn-icon-top">부가기능</a></li>
+							<li><a href="#tab_chat"
+								class="ui-btn ui-nodisc-icon ui-icon-chat ui-btn-icon-top">채팅</a></li>
+							</ul>
+						</div>
+					</div>
 
-		<div data-role="panel" id="schedulepanel" data-position="left"
-		data-position-fixed="true" data-display="overlay" data-theme="a">
-		<h1>설정</h1>
-		<ul data-role="listview" data-theme="a">
-			<li><a href="mypage.html">내 정보</a></li>
-			<li><a href="project_select.html">프로젝트 선택창</a></li>
-			<li><a href="App_community.html">커뮤니티</a></li>
-			<li><a href="index.html">로그아웃</a></li>
-			<li><a href="#" data-rel="close">닫기</a></li>
-		</ul>
-	</div>
-	<!-- 설정 패널창 -->
-
-	<div data-role="header" data-theme="a" data-position="fixed"
-	data-tap-toggle="false">
-	<a href="#schedulepanel" data-icon="gear">설정</a>
-	<h1>일 정</h1>
-	<div data-role="navbar">
-		<ul>
-			<li><a href="#tab_memo"
-				class="ui-btn ui-nodisc-icon ui-icon-memo ui-btn-icon-top">업무</a></li>
-				<li><a href="#tab_schedule"
-					class="ui-btn-active ui-state-persist ui-btn ui-nodisc-icon ui-icon-schedule ui-btn-icon-top ">일정</a></li>
-					<li><a href="#tab_addfunc"
-						class="ui-btn ui-nodisc-icon ui-icon-addfunc ui-btn-icon-top">부가기능</a></li>
-						<li><a href="#tab_chat"
-							class="ui-btn ui-nodisc-icon ui-icon-chat ui-btn-icon-top">채팅</a></li>
-						</ul>
-					</div>
-				</div>
-				<div data-role="content" data-theme="a">
-					<img src="./img/calendar.png" height=350 width=auto>
-					<p>
-					</div>
-					<div data-role="footer" data-position="fixed" data-tap-toggle="false">
-						<h4>페이지 바닥글</h4>
-					</div>
-				</div> <!-- *************************************************************************************** -->
+					<div data-role="content">       
+						<div id='calendar' style="width:100%;"></div>
+					</div><!-- /content -->
+				</div> 
+				<!-- *************************************************************************************** -->
 				<!-- **************************************부가기능 창************************************** -->
 				<!-- *************************************************************************************** -->
 
@@ -596,7 +681,7 @@ function logout(){
 							class="ui-btn ui-nodisc-icon ui-icon-memo ui-btn-icon-top">업무</a></li>
 							<li><a href="#tab_schedule"
 								class="ui-btn ui-nodisc-icon ui-icon-schedule ui-btn-icon-top ">일정</a></li>
-								<li><a href="#tab_addfunc"
+								<li><a href="#tab_addfunc" 
 									class="ui-btn-active ui-state-persist ui-btn ui-nodisc-icon ui-icon-addfunc ui-btn-icon-top">부가기능</a></li>
 									<li><a href="#tab_chat"
 										class="ui-btn ui-nodisc-icon ui-icon-chat ui-btn-icon-top">채팅</a></li>
