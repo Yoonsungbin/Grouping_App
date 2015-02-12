@@ -13,7 +13,7 @@
 	<script type="text/javascript" src="http://cdn.socket.io/socket.io-1.2.1.js"></script>
 	<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.min.js"></script>
 	<script src="jquery.ui.touch-punch.min.js"></script>
-	
+
 	<script>
 		$.mobile.defaultPageTransition = 'none'
 		$.mobile.defaultDialogTransition = 'none'
@@ -33,165 +33,155 @@
 	</script>
 	<script type="text/javascript">
 	//채팅페이지
-		var socket = io.connect('http://54.65.21.180:8080');
-		var User_Name = localStorage.getItem('User_Name');
-		var Project_Id = localStorage.getItem('Project_Id');
-		var Project_Index = localStorage.getItem('Project_Index');
-		var Time = new Date();
-		var lastdate = '';
+	var socket = io.connect('http://54.65.21.180:8080');
+	var User_Name = localStorage.getItem('User_Name');
+	var Project_Id = localStorage.getItem('Project_Id');
+	var Project_Index = localStorage.getItem('Project_Index');
+	var Time = new Date();
+	var lastdate = '';
 
-		socket.emit('join', {
-			User_Name : User_Name,
-			Project_Id : Project_Id
-		});
-		socket.emit('getgreet', User_Name + '님이 접속하셨습니다.');
-		console.log('chat join');
-		socket
-		.on(
-			'connect',
+	socket.emit('join', {
+		User_Name : User_Name,
+		Project_Id : Project_Id
+	});
+	socket.emit('getgreet', User_Name + '님이 접속하셨습니다.');
+	console.log('chat join');
+	socket
+	.on('connect',function() {
+		$('form').submit(
 			function() {
-				$('form').submit(
-					function() {
-						var message = $('#m').val();
-						var current_time = Time.getHours() + ":"
-						+ Time.getMinutes();
-						socket.emit('getmessage', {
-							message : message,
-							User_Name : User_Name,
-							Time : current_time
-						});
-						$('#m').val('');
-						return false;
-					});
-				socket.on('premessage',function(data) {
-
-					var text = '';
-					if(data.NewJoin == User_Name){
-						if (data.Member == User_Name) {
-							text += "<div>";
-
-							text += "<span style='display:inline-block; .display:inline; float: right; border: 1px solid blue; margin:auto width:auto'>"
-							+ data.message
-							+ "</span>";
-							text += "<span style='display:inline-block; .display:inline; float: right; margin:auto width:auto'><sub>"
-							+ data.Time
-							+ "</sub></span>";
-							text += "</div><p>&nbsp;</p>";
-							$('#messages').append(text);
-						} else {
-							var text = '';
-
-							text += "<div>";
-							text += "<span style='display:inline-block; .display:inline; float: left; border: 1px solid red; margin:auto width:auto'>"
-							+ data.Member
-							+ ':'
-							+ "</span>";
-							text += "<span style='display:inline-block; .display:inline; float: left; border: 1px solid red; margin:auto width:auto'>"
-							+ data.message
-							+ "</span>";
-
-							text += "<span style='display:inline-block; .display:inline; float: left; margin:auto width:auto'><sub>"
-							+ data.Time
-							+ "</sub></span>";
-							text += "</div><p>&nbsp;</p>";
-							$('#messages').append(text);
-						}
-					}
-					var el = document
-					.getElementById('messages');
-					el.scrollIntoView(false);
+				var message = $('#m').val();
+				var current_time = Time.getHours() + ":"
+				+ Time.getMinutes();
+				socket.emit('getmessage', {
+					message : message,
+					User_Name : User_Name,
+					Time : current_time
 				});
+				$('#m').val('');
+				return false;
+			});
+		socket.on('premessage',function(data) {
+			var text = '';
+			if(data.NewJoin == User_Name){
+				if (data.Member == User_Name) {
+					text += "<div>";
+					text += "<span style='display:inline-block; .display:inline; float: right; border: 1px solid blue; margin:auto width:auto'>"
+					+ data.message
+					+ "</span>";
+					text += "<span style='display:inline-block; .display:inline; float: right; margin:auto width:auto'><sub>"
+					+ data.Time
+					+ "</sub></span>";
+					text += "</div><p>&nbsp;</p>";
+					$('#messages').append(text);
+				} else {
+					var text = '';
+
+					text += "<div>";
+					text += "<span style='display:inline-block; .display:inline; float: left; border: 1px solid red; margin:auto width:auto'>"
+					+ data.Member
+					+ ':'
+					+ "</span>";
+					text += "<span style='display:inline-block; .display:inline; float: left; border: 1px solid red; margin:auto width:auto'>"
+					+ data.message
+					+ "</span>";
+
+					text += "<span style='display:inline-block; .display:inline; float: left; margin:auto width:auto'><sub>"
+					+ data.Time
+					+ "</sub></span>";
+					text += "</div><p>&nbsp;</p>";
+					$('#messages').append(text);
+				}
+			}
+			var el = document
+			.getElementById('messages');
+			el.scrollIntoView(false);
+		});
 socket.on('putgreet', function(msg) {
 	$('#messages').append($('<h4 align="center">').text(msg));
 });
 
-						//접속유저 보이는 곳
-						socket.on('Connect_Member', function(data) {
-							console.log('userprint');
-							var dataform = JSON.stringify(data);
-							var user = '';
-							console.log(dataform);
-							var temp = JSON.parse(dataform);
-							var count = temp.length;
-							console.log('count : ' + count);
 
-							var list = [];
-							for (var i = 0; i < count; i++) {
-								console.log(temp[i]);
-								list.push({
-									'user' : temp[i].Member_Name
-								});
-							}
-							$.each(list, function(index, item) {
-								user += "<li>" + "●" + item.user + "<br></li>";
-							});
-							console.log(user);
-							$('#access_user').empty();
-							$('#access_user').listview().listview('refresh');
-							$('#access_user').append(user).listview('refresh');
-							user = '';
-							list = '';
-						});
-						socket.on('Disconnect_Member',function(data) {
-							console.log('disconnect user print');
-							var DisConnect_Dataform = JSON.stringify(data);
-							var user1 = '';
-							var temp1 = JSON.parse(DisConnect_Dataform);
-							var count1 = temp1.length;
-							console.log('count : ' + count1);
+						 //접속한 사람을 알기위한 함수 
+						 socket.on('Connect_Member', function(data){                
+						 	var Connect_List = [];
+						 	var Connect_Dataform = JSON.stringify(data);
+						 	var Connect_User = '';               
+						 	var Connect = JSON.parse(Connect_Dataform);
+						 	var count = Connect[0].Access_Member.length;
 
-							var list1 = [];
-							for (var i = 0; i < count1; i++) {
-								list1.push({
-									'user' : temp1[i].Member_Name
-								});
-							}
-							$.each(list1, function(index, item) {
-								user1 += "<li>" + "●" + item.user
-								+ "<br></li>";
-							});
-							console.log(user1);
-							$('#nonaccess_user').empty();
-							$('#nonaccess_user').listview().listview('refresh');
-							$('#nonaccess_user').append(user1).listview('refresh');
-							user1 = '';
-							list1 = '';
-						});
+						 	for( var i =0;i<count;i++){
+						 		console.log(Connect[0].Access_Member[i]);
+						 		Connect_List.push({'user' : Connect[0].Access_Member[i]});
+						 	}                     
+						 	$.each(Connect_List, function(index, item){
+						 		Connect_User += "<li>" + "●" + item.user + "<br></li>";
+						 	});
+						 	$('#access_user').empty();
+						 	$('#access_user').listview().listview('refresh');
+						 	$('#access_user').append(Connect_User).listview('refresh');
+						 	Connect_User = '';
+						 	Connect_List = '';
+						 });
+						 socket.on('Disconnect_Member', function(data) {
+						 	var DisConnect_Dataform = JSON.stringify(data);
+						 	var DisConnect_User = '';
+						 	var DisConnect = JSON.parse(DisConnect_Dataform);
+						 	var DisConnect_Count = DisConnect[0].Access_Member.length;
+						 	var DisConnect_List = [];
+						 	for( var i =0;i<DisConnect_Count;i++){           
+						 		DisConnect_List.push({'user' : DisConnect[0].Access_Member[i]});
+						 	}
 
-						socket.on('putmessage',	function(data) {
 
-							if (data.User_Name == User_Name) {
-								var text = '';
-								text += "<div>";
-								text += "<span style='display:inline-block; .display:inline; float: right; border: 1px solid blue; margin:auto width:auto'>"
-								+ data.message
-								+ "</span>";
-								text += "<span style='display:inline-block; .display:inline; float: right; margin:auto width:auto'><sub>"
-								+ data.Time
-								+ "</sub></span>";
-								text += "</div><p>&nbsp;</p>";
-								$('#messages').append(text);
-							} else {
-								var text = '';
-								text += "<div>";
-								text += "<span style='display:inline-block; .display:inline; float: left; border: 1px solid red; margin:auto width:auto;'>"
-								+ data.User_Name
-								+ ':'
-								+ "</span>";
-								text += "<span style='display:inline-block; .display:inline; float: left; border: 1px solid red; margin:auto width:auto;'>"
-								+ data.message
-								+ "  </span>";
-								text += "<span style='display:inline-block; .display:inline; float: left; margin:auto width:auto;'><sub>"
-								+ data.Time
-								+ "</sub></span>";
-								text += "</div><p>&nbsp;</p>";
-								$('#messages').append(text);
+						 	$.each(DisConnect_List, function(index, item){
+						 		DisConnect_User += "<li>" + "●" + item.user
+						 		+ "<br></li>";
+						 	});
 
-							}
-							var el = document
-							.getElementById('messages');
-							el.scrollIntoView(false);
-						});
+						 	$('#nonaccess_user').empty();
+						 	$('#nonaccess_user').listview().listview('refresh');
+						 	$('#nonaccess_user').append(DisConnect_User).listview('refresh');
+						 	DisConnect_User = '';
+						 	DisConnect_List = '';
+
+						 });
+
+
+						 socket.on('putmessage',	function(data) {
+
+						 	if (data.User_Name == User_Name) {
+						 		var text = '';
+						 		text += "<div>";
+						 		text += "<span style='display:inline-block; .display:inline; float: right; border: 1px solid blue; margin:auto width:auto'>"
+						 		+ data.message
+						 		+ "</span>";
+						 		text += "<span style='display:inline-block; .display:inline; float: right; margin:auto width:auto'><sub>"
+						 		+ data.Time
+						 		+ "</sub></span>";
+						 		text += "</div><p>&nbsp;</p>";
+						 		$('#messages').append(text);
+						 	} else {
+						 		var text = '';
+						 		text += "<div>";
+						 		text += "<span style='display:inline-block; .display:inline; float: left; border: 1px solid red; margin:auto width:auto;'>"
+						 		+ data.User_Name
+						 		+ ':'
+						 		+ "</span>";
+						 		text += "<span style='display:inline-block; .display:inline; float: left; border: 1px solid red; margin:auto width:auto;'>"
+						 		+ data.message
+						 		+ "  </span>";
+						 		text += "<span style='display:inline-block; .display:inline; float: left; margin:auto width:auto;'><sub>"
+						 		+ data.Time
+						 		+ "</sub></span>";
+						 		text += "</div><p>&nbsp;</p>";
+						 		$('#messages').append(text);
+
+						 	}
+						 	var el = document
+						 	.getElementById('messages');
+						 	el.scrollIntoView(false);
+						 });
 
 });
 
@@ -202,7 +192,7 @@ function addprojectmember() {
 		dataType : 'json',
 		type : 'POST',
 		data : {
-			'Project_Index' : Project_Index,
+			'Project_Id' : localStorage.getItem('Project_Id'),
 			'Member_Email' : $("#member_name").val(),
 			'User_Email' : localStorage.getItem('User_Email'),
 			'User_Pass' : localStorage.getItem('User_Pass')
@@ -224,56 +214,56 @@ function addprojectmember() {
 
 //memo show 메모창에서 메모데이터 보여주는 함수
 
-	$.ajax({
-		url : 'http://54.65.21.180:8080/appviewmemo',
-		dataType : 'json',
-		type : 'POST',
-		data : {
-			'Project_Id' : localStorage.getItem('Project_Id'),
-			'User_Name' : localStorage.getItem('User_Name')
-		},
-		success : function(result) {
-			var Work_Name = new Array();
-			var Work_DueDate = new Array();
-			var Work_Id = new Array();
-			var memodataform = JSON.stringify(result);
-			var memotemp = JSON.parse(memodataform);
-			console.log(memotemp);
-			console.log(memodataform);
-			console.log('momo count : ' + memotemp.Work_Length);
-			var memocount = memotemp.Work_Length;
-			for (var i = 0; i < memocount; i++) {
-				Work_Id[i] = memotemp.Work_Id[i];
-				Work_Name[i] = memotemp.Work_Name[i];
-				if(memotemp.Work_DueDate[i]==null){
-					Work_DueDate[i] = 0;
+$.ajax({
+	url : 'http://54.65.21.180:8080/appviewmemo',
+	dataType : 'json',
+	type : 'POST',
+	data : {
+		'Project_Id' : localStorage.getItem('Project_Id'),
+		'User_Name' : localStorage.getItem('User_Name')
+	},
+	success : function(result) {
+		var Work_Name = new Array();
+		var Work_DueDate = new Array();
+		var Work_Id = new Array();
+		var memodataform = JSON.stringify(result);
+		var memotemp = JSON.parse(memodataform);
+		console.log(memotemp);
+		console.log(memodataform);
+		console.log('momo count : ' + memotemp.Work_Length);
+		var memocount = memotemp.Work_Length;
+		for (var i = 0; i < memocount; i++) {
+			Work_Id[i] = memotemp.Work_Id[i];
+			Work_Name[i] = memotemp.Work_Name[i];
+			if(memotemp.Work_DueDate[i]==null){
+				Work_DueDate[i] = 0;
 
-				} else {
-					Work_DueDate[i] = memotemp.Work_DueDate[i];
-				}
-				console.log(Work_Id[i]);
-				console.log(Work_Name[i]);
-				console.log(Work_DueDate[i]);
+			} else {
+				Work_DueDate[i] = memotemp.Work_DueDate[i];
 			}
-			var memolist = [];
-			for (var i = 0; i < memocount; i++) {
-				memolist.push({
-					'Work_Name' : Work_Name[i],
-					'Work_Id' :Work_Id[i],
-					'Work_DueDate' :  Work_DueDate[i]
-				});
-			}
-			var text = "";
-			
-			$.each(memolist, function(index,item) {
-				text += "<li id ='"+item.Work_Id+"' class='ui-state-default'>"+"<a class='memolist' href='' rel='external'>"+"<span class='ui-icon ui-icon-bars ui-btn-icon-left'></span>"+"<span class='ui-li-count'>D-Day:"+item.Work_DueDate+"</span>"+ item.Work_Name+ "<a href='' class ='deletememo' data-rel='popup' data-position-to='window' data-transition='pop'>삭제</a></li>"			
-			});
-
-			$('#pre_memolist').append(text).listview('refresh');
-			console.log('출력 완료');
+			console.log(Work_Id[i]);
+			console.log(Work_Name[i]);
+			console.log(Work_DueDate[i]);
 		}
+		var memolist = [];
+		for (var i = 0; i < memocount; i++) {
+			memolist.push({
+				'Work_Name' : Work_Name[i],
+				'Work_Id' :Work_Id[i],
+				'Work_DueDate' :  Work_DueDate[i]
+			});
+		}
+		var text = "";
 
-	});
+		$.each(memolist, function(index,item) {
+			text += "<li id ='"+item.Work_Id+"' class='ui-state-default'>"+"<a class='memolist' href='' rel='external'>"+"<span class='ui-icon ui-icon-bars ui-btn-icon-left'></span>"+"<span class='ui-li-count'>D-Day:"+item.Work_DueDate+"</span>"+ item.Work_Name+ "<a href='' class ='deletememo' data-rel='popup' data-position-to='window' data-transition='pop'>삭제</a></li>"			
+		});
+
+		$('#pre_memolist').append(text).listview('refresh');
+		console.log('출력 완료');
+	}
+
+});
 //tab memo html 메모 클릭햇을때
 $(document).on("click", ".memolist", function() {
 	var tempid = $(this).parent().attr('id');
@@ -328,45 +318,45 @@ $(document).on("click", ".deletememo", function() {
 		location.replace('tab_memo.html');
 	}
 //momo show html 참여자 목록보여주기
-	function selectmember() {
-      console.log('selectmember 시작');
-      console.log(localStorage.getItem('Project_Id'));
-      $.ajax({
-         url : 'http://54.65.21.180:8080/appgetprojectmember',
-         dataType : 'json',
-         type : 'POST',
-         data : {
-            'Project_Id' : localStorage.getItem('Project_Id')
-         },
-         success : function(result) {
-            var Project_Member_Name = [];
-            var Member_Id = [];
-            var dataform = JSON.stringify(result);
-            var temp = JSON.parse(dataform);
-            console.log(temp[0]);
-            var count = temp[0].In_Member.length;
-            var list = [];   
-            console.log(count);
-     		console.log('success');             
-            for (var i = 0; i < count; i++) {
-               list.push({'user': temp[0].In_Member[i], 'id':temp[0]._id[i]});      
-         }
-      
-         var index = 0;
-         
-         var text = "";
-         $.each(list, function(index, item) {
-            text += "<option value="+item.id+">" + item.user
-            + "</option>";
-         });         
-         $('#select-participant').empty();
-         $('#select-participant').listview().listview('refresh');
-         $('#select-participant').append(text).listview('refresh');
-         text = "";
-         index = 0;
-         list = [];
-      }
-   });
+function selectmember() {
+	console.log('selectmember 시작');
+	console.log(localStorage.getItem('Project_Id'));
+	$.ajax({
+		url : 'http://54.65.21.180:8080/appgetprojectmember',
+		dataType : 'json',
+		type : 'POST',
+		data : {
+			'Project_Id' : localStorage.getItem('Project_Id')
+		},
+		success : function(result) {
+			var Project_Member_Name = [];
+			var Member_Id = [];
+			var dataform = JSON.stringify(result);
+			var temp = JSON.parse(dataform);
+			console.log(temp[0]);
+			var count = temp[0].In_Member.length;
+			var list = [];   
+			console.log(count);
+			console.log('success');             
+			for (var i = 0; i < count; i++) {
+				list.push({'user': temp[0].In_Member[i], 'id':temp[0]._id[i]});      
+			}
+
+			var index = 0;
+
+			var text = "";
+			$.each(list, function(index, item) {
+				text += "<option value="+item.id+">" + item.user
+				+ "</option>";
+			});         
+			$('#select-participant').empty();
+			$('#select-participant').listview().listview('refresh');
+			$('#select-participant').append(text).listview('refresh');
+			text = "";
+			index = 0;
+			list = [];
+		}
+	});
 }
 //tab memo html  삭제클릭햇을떄 실행되는함수
 function deletememo(){
@@ -418,7 +408,7 @@ function logout(){
 				<li><a href="#" data-rel="close">닫기</a></li>
 			</ul>
 		</div>
-		
+
 		<div data-role="popup" id="add_member" data-theme="a" class="ui-corner-all">
 			<form>
 				<div style="padding:10px 20px;">
