@@ -8,8 +8,8 @@ Bit Project App
 ## 변경사항 1.0
 [README.md 문법 사용법](https://teragoon.wordpress.com/2012/04/04/github%EC%97%90%EC%84%9C-readmemd-%EC%9E%91%EC%84%B1%ED%95%98%EA%B8%B0markdown-%EB%AC%B8%EB%B2%95/)
 
-<전체>
-JS 파일 분리
+##전체 
+파일 분리
   - Calendar.js
   - Camera_Upload.js
   - Chat.js
