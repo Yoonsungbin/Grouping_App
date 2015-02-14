@@ -46,6 +46,7 @@
 					<li><a href="" onclick="project_selectfunc();">프로젝트 선택창</a></li>
 					<li><a href="" onclick="App_communityfunc();">커뮤니티</a></li>
 					<li><a href="" onclick="logout();">로그아웃</a></li>
+					<li><a href="#" data-rel="close">닫기</a></li>
 				</ul>
 			</div>
 
@@ -92,18 +93,23 @@
 
 				<div data-role="collapsible">
 					<h4>사진업로드</h4>
-									
+					<form>					
 						<button onclick="capturePhoto();">사진 찍기</button>
 						<button onclick="getPhoto(pictureSource.PHOTOLIBRARY);">앨범에서 가져오기</button>
 						<div>
 							<a href='#' id="photoadd" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-btn-icon-left ui-icon-check">추가</a>
 						</div>
-					
 					<img style="display:none;width:100px;height:100px;" id="smallImage" src="" />
 					<img style="display:none;width:100px;height:100px;" id="largeImage" src="" />
+					</form>
 				</div>
 			</div>
 
+			<div data-role="footer" data-theme="a">
+				<ul data-role="listview" data-theme="a">
+					<li><a href="#" data-rel="close">닫기</a></li>
+				</ul>
+			</div><!-- footer -->
 		</div><!-- 설정panel -->
 
 		<div data-role="header" data-theme="a" data-position="fixed" data-tap-toggle="false">
@@ -208,6 +214,7 @@
 			<li><a href="project_select.html">프로젝트 선택창</a></li>
 			<li><a href="App_community.html">커뮤니티</a></li>
 			<li><a href="index.html">로그아웃</a></li>
+			<li><a href="#" data-rel="close">닫기</a></li>
 		</ul>
 	</div><!-- 설정 패널창 -->
 
@@ -255,6 +262,7 @@
 			<li><a href="project_select.html">프로젝트 선택창</a></li>
 			<li><a href="App_community.html">커뮤니티</a></li>
 			<li><a href="index.html">로그아웃</a></li>
+			<li><a href="#" data-rel="close">닫기</a></li>
 		</ul>
 	</div>
 	<!-- 설정 패널창 -->
@@ -304,19 +312,22 @@
 			<li><a href="" onclick="project_selectfunc();">프로젝트 선택창</a></li>
 			<li><a href="" onclick="App_communityfunc();">커뮤니티</a></li>
 			<li><a href="" onclick="logout();">로그아웃</a></li>
+			<li><a href="#" data-rel="close">닫기</a></li>
 		</ul>
 	</div><!-- 설정 패널창 -->
 
 	<div data-role="panel" id="memberpanel4" data-position="right" data-position-fixed="true" data-display="overlay" data-theme="a">
 		
 		<ul data-role="listview" data-theme="a">
-			<li data-role="list-divider" id="access_user">접속한 멤버</li>
-			<li class="ui-btn">윤성빈</a></li>
+			<li data-role="list-divider">접속한 멤버</li>
+			<!-- //<li class="ui-btn">윤성빈</a></li> -->
+			<li id="access_user"></li>
 		</ul><br><br>
 
 		<ul data-role="listview" data-theme="a">
-			<li data-role="list-divider" id="nonaccess_user">접속안한 멤버</li>
-			<li class="ui-btn">유동훈</a></li>
+			<li data-role="list-divider">접속안한 멤버</li>
+			<!-- <li class="ui-btn">유동훈</a></li> -->
+			<li id="nonaccess_user"></li>
 		</ul><br><br>
 
 		<ul data-role="listview" data-theme="a">
