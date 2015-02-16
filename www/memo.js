@@ -35,7 +35,7 @@ $(document).on("click", ".deletememo", function() {
 
 //업무리스트를 디비와 연동해서 보여지게 하는 부분
 $.ajax({
-		url : 'http://54.65.21.180:8080/appviewmemo',
+		url : 'http://165.132.221.182:8080/appviewmemo',
 		dataType : 'json',
 		type : 'POST',
 		data : {
@@ -90,7 +90,7 @@ $.ajax({
 function deletememo(){
 		var deleteid = localStorage.getItem('Select_Project_Id');
 		$.ajax({
-			url : 'http://54.65.21.180:8080/appdeletememo',
+			url : 'http://165.132.221.182:8080/appdeletememo',
 			dataType : 'json',
 			type : 'POST',
 			data : {'Delete_MemoId' : deleteid},
@@ -105,7 +105,7 @@ function selectmember() {
 		console.log('selectmember 시작');
 		console.log(localStorage.getItem('Project_Id'));
 		$.ajax({
-			url : 'http://54.65.21.180:8080/appgetprojectmember',
+			url : 'http://165.132.221.182:8080/appgetprojectmember',
 			dataType : 'json',
 			type : 'POST',
 			data : {
@@ -172,7 +172,7 @@ function memoaddfunc() {
 		});
 		var dataform = JSON.stringify(Work_Person);
 		$.ajax({
-			url : 'http://54.65.21.180:8080/appaddmemo',
+			url : 'http://165.132.221.182:8080/appaddmemo',
 			dataType : 'json',
 			type : 'POST',
 			data : {
@@ -194,7 +194,7 @@ function memoaddfunc() {
 //프로젝트에 멤버 추가시 사용되는 함수
 function addprojectmember() {
 	$.ajax({
-		url : 'http://54.65.21.180:8080/addprojectmember',
+		url : 'http://165.132.221.182:8080/addprojectmember',
 		dataType : 'json',
 		type : 'POST',
 		data : {

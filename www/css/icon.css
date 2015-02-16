@@ -25,15 +25,3 @@
     /* Make your icon fit */
     background-size: 19px 19px;
 }
-
-/*.ui-icon-heart:after {
-    background-color: green;
-}*/
-
-#access_user.ui-icon-heart:after {
-     background-color: red;
-}
-
-#nonaccess_user.ui-icon-heart:after {
-     background-color: gray;
-}

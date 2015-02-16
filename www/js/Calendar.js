@@ -12,7 +12,7 @@
             //disableDragging: true,      
             events: function(start, end, callback) {
             	$.ajax({
-            		url: 'http://54.65.21.180:8080/Calendar_Getdata',
+            		url: 'http://165.132.221.182:8080/Calendar_Getdata',
             		dataType: 'json',
             		type : 'POST',
             		data: {
@@ -55,7 +55,7 @@ eventDrop: function(event){
 	var Dday = dy+'-'+dm+'-'+dd;
 
 	$.ajax({
-		url: 'http://54.65.21.180:8080/Calendar_Modify',
+		url: 'http://165.132.221.182:8080/Calendar_Modify',
 		dataType: 'json',
 		type : 'POST',
 		data: {          
@@ -82,7 +82,7 @@ eventResize:function(event){
 	var Dday = dy+'-'+dm+'-'+dd;
 
 	$.ajax({
-		url: 'http://54.65.21.180:8080/Calendar_Modify',
+		url: 'http://165.132.221.182:8080/Calendar_Modify',
 		dataType: 'json',
 		type : 'POST',
 		data: {          

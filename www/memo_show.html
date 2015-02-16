@@ -12,8 +12,8 @@
 	<script	src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
 </head>
 <script>
-	   $.ajax({
-      url : 'http://54.65.21.180:8080/appshowmemo',
+	  $.ajax({
+      url : 'http://165.132.221.182:8080/appshowmemo',
       dataType : 'json',
       type : 'POST',
       data :  
@@ -21,15 +21,13 @@
          'Project_Work_Id' : localStorage.getItem('Project_Work_Id')
       },
       success : function(result){
-         var Work = new Array();
-         console.log('이거되냐!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!?'+result);      
+         var Work = new Array();   
          var memodataform = JSON.stringify(result);
          var memotemp = JSON.parse(memodataform);
          var dataform = JSON.stringify(result.Work_Person);
          var temp = JSON.parse(dataform);
          var count = temp.length;   
-         var text = '';
-         
+         var text = '';         
          if(count == 0){
             text = '';
          }
@@ -56,7 +54,7 @@
 
 	var Work = [];
 	$.ajax({
-		url : 'http://54.65.21.180:8080/appgetcomment',
+		url : 'http://165.132.221.182:8080/appgetcomment',
 		dataType : 'json',
 		type : 'POST',
 		data : {
@@ -113,7 +111,7 @@ $(document)
 $(document).on("click", ".deleteComment", function(){	
 	var deleteid = $(this).parent().attr('id');
 	$.ajax({
-		url : 'http://54.65.21.180:8080/appdeletecomment',
+		url : 'http://165.132.221.182:8080/appdeletecomment',
 		dataType : 'json',
 		type : 'POST',
 		data : {
@@ -132,7 +130,7 @@ function modifycomment(){
 	console.log($("#comment_area").val());
 	console.log('qwekjeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
 	$.ajax({
-		url : 'http://54.65.21.180:8080/appmodifycomment',
+		url : 'http://165.132.221.182:8080/appmodifycomment',
 		dataType : 'json',
 		type : 'POST',
 		data : {
@@ -161,7 +159,7 @@ function commentadd(){
 	console.log(dataform);
 	
 	$.ajax({
-		url : 'http://54.65.21.180:8080/appaddcomment',
+		url : 'http://165.132.221.182:8080/appaddcomment',
 		dataType : 'json',
 		type : 'POST',
 		data : {
@@ -227,8 +225,7 @@ function gototab_memo(){
                   </h1>
                   <h3 id="memoSday">
                   </h4>
-               </li>
-               
+               </li>              
                <li class="ui-field-contain">
                   <h1>
                      <b>마감일</b>
@@ -251,7 +248,6 @@ function gototab_memo(){
 		</div>
 
 		<div data-role="footer">
-
 			<div data-role="popup" id="comment_modify" data-theme="a"
 			class="ui-corner-all" data-dismissible="false">
 			<form>
@@ -264,7 +260,6 @@ function gototab_memo(){
 					rel="external" data-transition="flow" onclick = "modifycomment();">수정</a> <a href="#"
 					class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b ui-icon-back ui-btn-icon-left"
 					rel="external" onclick = "location.replace('memo_show.html');">취소</a>
-
 				</div>
 			</form>
 		</div>
@@ -273,10 +268,7 @@ function gototab_memo(){
 		<h4>댓글</h4>
 
 		<ul data-role="listview" data-inset="false">
-
-
-			<li class="ui-grid-a" id="memocomment">
-				
+			<li class="ui-grid-a" id="memocomment">			
 			</li>
 
 			<li class="ui-grid-b">
