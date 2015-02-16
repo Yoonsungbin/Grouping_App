@@ -3,7 +3,6 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta content="telephone=no" name="format-detection">
 	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
 	<link rel="stylesheet" href="css/themes/MangoApp_theme.css" />
 	<link rel="stylesheet" href="css/themes/MangoApp_theme.min.css" />
@@ -21,7 +20,6 @@
 	<script src="js/Calendar.js"></script>
 	<script src="js/Chat.js"></script>
 	<script src="js/Memo.js"></script>
-
 
 </head>
 <body onload="initFastButtons();">
@@ -47,7 +45,6 @@
 					<li><a href="" onclick="project_selectfunc();">프로젝트 선택창</a></li>
 					<li><a href="" onclick="App_communityfunc();">커뮤니티</a></li>
 					<li><a href="" onclick="logout();">로그아웃</a></li>
-					<li><a href="#" data-rel="close">닫기</a></li>
 				</ul>
 			</div>
 
@@ -69,7 +66,10 @@
 							<input type="text" name="memo_name" id="m_sbj" value="" data-theme="a">
 
 							<label for="select-participant" class="select">참여자</label>
-							<select	multiple="multiple"	name="select_choice[]" id="select-participant"	onclick="selectmember();">
+							<select
+							multiple="multiple" data-native-menu="false"
+							name="select_choice[]" id="select-participant"
+							onclick="selectmember();">
 						</select> 
 
 						<label for="memo_date_start">시작일</label>
@@ -90,20 +90,19 @@
 				</div>
 
 				<div data-role="collapsible">
-					<h4>사진업로드</h4>								
-						<button onclick="capturePhoto();">카메라</button><br>
-					<!-- 	<button onclick="getPhoto(pictureSource.PHOTOLIBRARY);">From Photo
-							Library</button><br> -->
-						<img id="aa" src="" style="display:none;width:100%;">
-						<button onclick="upload();">업로드</button>												
+					<h4>사진업로드</h4>
+					<form>					
+						<button onclick="capturePhoto();">사진 찍기</button>
+						<button onclick="getPhoto(pictureSource.PHOTOLIBRARY);">앨범에서 가져오기</button>
+						<div>
+							<a href='#' id="photoadd" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-btn-icon-left ui-icon-check">추가</a>
+						</div>
+					<img style="display:none;width:100px;height:100px;" id="smallImage" src="" />
+					<img style="display:none;width:100px;height:100px;" id="largeImage" src="" />
+					</form>
 				</div>
 			</div>
 
-			<div data-role="footer" data-theme="a">
-				<ul data-role="listview" data-theme="a">
-					<li><a href="#" data-rel="close">닫기</a></li>
-				</ul>
-			</div><!-- footer -->
 		</div><!-- 설정panel -->
 
 		<div data-role="header" data-theme="a" data-position="fixed" data-tap-toggle="false">
@@ -208,7 +207,6 @@
 			<li><a href="project_select.html">프로젝트 선택창</a></li>
 			<li><a href="App_community.html">커뮤니티</a></li>
 			<li><a href="index.html">로그아웃</a></li>
-			<li><a href="#" data-rel="close">닫기</a></li>
 		</ul>
 	</div><!-- 설정 패널창 -->
 
@@ -256,7 +254,6 @@
 			<li><a href="project_select.html">프로젝트 선택창</a></li>
 			<li><a href="App_community.html">커뮤니티</a></li>
 			<li><a href="index.html">로그아웃</a></li>
-			<li><a href="#" data-rel="close">닫기</a></li>
 		</ul>
 	</div>
 	<!-- 설정 패널창 -->
@@ -277,6 +274,7 @@
 	<div data-role="content" data-theme="a">
 		<div data-role="navbar" data-theme="a">
 			<a href="vote_list.html">투표</a>
+			<a href="#">파일 공유</a>
 		</div><!-- navbar -->
 	</div><!-- content -->
 
@@ -306,27 +304,23 @@
 			<li><a href="" onclick="project_selectfunc();">프로젝트 선택창</a></li>
 			<li><a href="" onclick="App_communityfunc();">커뮤니티</a></li>
 			<li><a href="" onclick="logout();">로그아웃</a></li>
-			<li><a href="#" data-rel="close">닫기</a></li>
 		</ul>
 	</div><!-- 설정 패널창 -->
 
 	<div data-role="panel" id="memberpanel4" data-position="right" data-position-fixed="true" data-display="overlay" data-theme="a">
 		
-		<ul data-role="listview" data-theme="a">
-			<li data-role="list-divider">접속한 멤버</li>
-			<!-- //<li class="ui-btn">윤성빈</a></li> -->
-			<li id="access_user"></li>
-		</ul><br><br>
-
-		<ul data-role="listview" data-theme="a">
-			<li data-role="list-divider">접속안한 멤버</li>
-			<!-- <li class="ui-btn">유동훈</a></li> -->
-			<li id="nonaccess_user"></li>
-		</ul><br><br>
-
-		<ul data-role="listview" data-theme="a">
-			<li><a href="#" data-rel="close">닫기</a></li>
+		<ul data-role="listview" data-theme="a" data-inset="true">
+			<li data-role="list-divider">프로젝트에 참여중인 사람</li>
+			<li id="access_user" class="ui-btn ui-shadow ui-btn-icon-right ui-icon-heart">윤성빈</a></li>
+			<li id="nonaccess_user" class="ui-btn ui-shadow ui-btn-icon-right ui-icon-heart">유동훈</a></li>
+			<!-- <li id="access_user"></li> -->
+			<!-- <li id="nonaccess_user"></li> -->
 		</ul>
+
+		
+			
+			
+		
 
 	</div><!-- 멤버보기 패널창 -->
 

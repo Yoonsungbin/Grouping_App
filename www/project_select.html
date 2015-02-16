@@ -18,7 +18,7 @@
 	var Project_Id = [];
 	var count;
 	$.ajax({
-				url : 'http://165.132.221.182:8080/appprojectinit',
+				url : 'http://54.65.21.180:8080/appprojectinit',
 				dataType : 'json',
 				type : 'POST',
 				data : {
@@ -47,7 +47,7 @@
 					}
 					var text = "";
 					$.each(list,function(index, item) {
-										text += "<li><br><a class='prj' id="+item.Project_Id+" name='"+item.title+"' href='' rel='external'><br>"
+										text += "<li><br><a class='prj' id="+item.Project_Id+" href='' rel='external'><br>"
 												+ item.title + "<br></a></li>";
 										
 									});
@@ -58,7 +58,7 @@
 	function addproject() {
 		console.log($("#prj_name").val());
 		$.ajax({
-			url : 'http://165.132.221.182:8080/appprojectcreate',
+			url : 'http://54.65.21.180:8080/appprojectcreate',
 			dataType : 'json',
 			type : 'POST',
 			data : {
@@ -80,7 +80,7 @@
 		console.log($("#prj_name").val());
 		console.log('delete function start');
 		$.ajax({
-			url : 'http://165.132.221.182:8080/appprojectdelete',
+			url : 'http://54.65.21.180:8080/appprojectdelete',
 			dataType : 'json',
 			type : 'POST',
 			data : {
@@ -110,9 +110,13 @@
 			// $(this).remove();
 		});
 	});
+	// $(document).on("pagecreate", function() {
+	// 	$(document).on("click", ".prj", function() {
+	// 		localStorage.setItem("Project_Index", this.id);
+	// 	});
+	// });
 	$(document).on("click", ".prj", function() {
-		console.log($(this).attr('name'));
-		localStorage.setItem("Project_Name", $(this).attr('name'));
+		
 		localStorage.setItem("Project_Id", this.id);
 		location.replace('tab_memo.html');
 	});

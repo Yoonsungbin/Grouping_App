@@ -18,9 +18,11 @@ $(document).bind('pageinit', function() {
 //업무 클릭시 memo_show.html로 넘어감
 $(document).on("click", ".memolist", function() {
 	var tempid = $(this).parent().attr('id');
-	console.log('memo 선택했을때 나오는 id입니다. :' + tempid);
-	console.log('Project_Work_Id에 추가합니다.');
-	localStorage.setItem("Project_Work_Id", tempid);	
+	console.log('hi');
+	console.log('asdjklqjwkldjklasjdkljklqjwkljdaklsjdklqwjdklasjkldjqklwjklasjkldjklasjdklasjdq');
+	console.log(tempid);
+	console.log(this.id);
+	localStorage.setItem("Project_Work_Id", tempid);
 	location.replace('memo_show.html');
 });
 
@@ -33,7 +35,7 @@ $(document).on("click", ".deletememo", function() {
 
 //업무리스트를 디비와 연동해서 보여지게 하는 부분
 $.ajax({
-		url : 'http://165.132.221.182:8080/appviewmemo',
+		url : 'http://54.65.21.180:8080/appviewmemo',
 		dataType : 'json',
 		type : 'POST',
 		data : {
@@ -55,6 +57,7 @@ $.ajax({
 				Work_Name[i] = memotemp.Work_Name[i];
 				if(memotemp.Work_DueDate[i]==null){
 					Work_DueDate[i] = 0;
+
 				} else {
 					Work_DueDate[i] = memotemp.Work_DueDate[i];
 				}
@@ -87,7 +90,7 @@ $.ajax({
 function deletememo(){
 		var deleteid = localStorage.getItem('Select_Project_Id');
 		$.ajax({
-			url : 'http://165.132.221.182:8080/appdeletememo',
+			url : 'http://54.65.21.180:8080/appdeletememo',
 			dataType : 'json',
 			type : 'POST',
 			data : {'Delete_MemoId' : deleteid},
@@ -102,7 +105,7 @@ function selectmember() {
 		console.log('selectmember 시작');
 		console.log(localStorage.getItem('Project_Id'));
 		$.ajax({
-			url : 'http://165.132.221.182:8080/appgetprojectmember',
+			url : 'http://54.65.21.180:8080/appgetprojectmember',
 			dataType : 'json',
 			type : 'POST',
 			data : {
@@ -169,16 +172,15 @@ function memoaddfunc() {
 		});
 		var dataform = JSON.stringify(Work_Person);
 		$.ajax({
-			url : 'http://165.132.221.182:8080/appaddmemo',
+			url : 'http://54.65.21.180:8080/appaddmemo',
 			dataType : 'json',
 			type : 'POST',
 			data : {
 				'Project_Id' : localStorage.getItem('Project_Id'),
-				'Project_Name' : localStorage.getItem('Project_Name'),
 				'Work_Name' : $('#m_sbj').val(),
 				'Work_Memo' : $('#m_textarea').val(),
-				'Work_Sday' : $('#memo_date_start').val(),
-				'Work_Dday' : $('#memo_date_finish').val(),
+				'Work_Sday' : $('#m_date_start').val(),
+				'Work_Dday' : $('#m_date_end').val(),
 				'Work_Finish' : 'ing',
 				'Work_Person' : dataform
 			},
@@ -192,7 +194,7 @@ function memoaddfunc() {
 //프로젝트에 멤버 추가시 사용되는 함수
 function addprojectmember() {
 	$.ajax({
-		url : 'http://165.132.221.182:8080/addprojectmember',
+		url : 'http://54.65.21.180:8080/addprojectmember',
 		dataType : 'json',
 		type : 'POST',
 		data : {

@@ -14,7 +14,7 @@
 <script>
 
 $.ajax({
-		url : 'http://165.132.221.182:8080/appgetprojectmember',
+		url : 'http://54.65.21.180:8080/appgetprojectmember',
 		dataType : 'json',
 		type : 'POST',
 		data : {
@@ -49,7 +49,7 @@ $.ajax({
 		}
 	});
 $.ajax({
-	url : 'http://165.132.221.182:8080/appshowmemo',
+	url : 'http://54.65.21.180:8080/appshowmemo',
 	dataType : 'json',
 	type : 'POST',
 	data : {
@@ -106,7 +106,7 @@ function memomodifyfunc(){
 		var dataform = JSON.stringify(Work_Person);
 			console.log(dataform);
 		$.ajax({
-            url : 'http://165.132.221.182:8080/appmodifymemo',
+            url : 'http://54.65.21.180:8080/appmodifymemo',
             dataType : 'json',
             type : 'POST',
             data : {
