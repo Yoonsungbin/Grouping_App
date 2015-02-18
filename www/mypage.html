@@ -6,33 +6,117 @@
 	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.css" />
 	<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
 	<script src="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.js"></script>
+	<script src="cordova.js"></script>
 	<script>
+	
 		$(document).ready(function(){
-				// 개인정보 가져오기 ---------------
-				// name, email, contribution 값을 데이터베이스에서 읽어 변수에 입력합니다.
-				var name = '이지영';
-				var email = 'jiyeonglee0725@gmail.com';
-				var contribution = '99%';
+			
+								// 개인정보 가져오기 ---------------
+				// name, email, contribution 값을 데이터베이스에서 읽어 변수에 입력합니다.		
 				// 데이터를 알맞은 곳에 표시합니다.
-				$('#name').text(name);
-				$('#email').text(email);
-				$('#contribution').text(contribution);	
-				
+				$('#name').text(localStorage.getItem('User_Name'));
+				$('#email').text(localStorage.getItem('User_Email'));
+				$('#contribution').text('0');	
+				console.log(localStorage.getItem('User_Id'));
 				// 할 일 가져오기 ---------------
 				// 해당 user의 task를 데이터베이스에서 읽어 배열에 입력합니다.
-				var task = [
-				{prj: '망고망고', content: '웹UI 프로토타입 완성'},
-				{prj: 'projectA', content: '기획서 작성'},
-				{prj: 'projectA', content: '서버 구축'},
-				{prj: 'projectC', content: '데이터베이스 설계'}
-				];		
-				// 각각의 배열을 테이블에서 행으로 표시될 html문서를 작성합니다.
-				var text = "";
-				$.each(task, function(index, item){
-					text += "<tr> <td>" + item.prj + "</td> <td>" + item.content + "</td> </tr>"; 
-				});
-				$('#mytask').append(text);		// mytask에 text를 덧붙입니다.
+				$.ajax({
+            		url: 'http://54.65.21.180:8080/GetMyWork',
+            		dataType: 'json',
+            		type : 'POST',
+            		data: {
+            			
+            			'User_Id' : localStorage.getItem('User_Id')
+            					},
+            		success: function(result) {
+            			console.log('내가속한거나옵니다.');
+            			console.log(result);
+            			var memodataform = JSON.stringify(result);
+            			var memotemp = JSON.parse(memodataform);
+            			var memocount = memotemp.length;
+            			var Work_Name = [];
+            			var Project_Name = [];          			
+            			for (var i = 0; i < memocount; i++) {
+            				Work_Name[i] = memotemp[i].Work_Name;
+            				Project_Name[i] = memotemp[i].Project_Name;
+            			}
+            			var list = [];
+            			var index = 0;		
+            			for (var i = 0; i < memocount; i++) {
+            				list.push({
+            					'Project_Name': Project_Name[i],
+            					'Work_Name' : Work_Name[i]
+            					
+            				});	
+            			}
+            			
+            			var text = "";
+            			$.each(list, function(index, item){			
+            				text += "<tr> <td>" + item.Project_Name + "</td> <td>" + item.Work_Name + "</td> </tr>"; 
+            			});        
+            			$('#mytask').append(text);
+            			
+            			
+            			
+         
+            		}            		
+            	});				
+						// mytask에 text를 덧붙입니다.
 			});
+
+		 function gotomain(){
+			location.replace('tab_memo.html');
+		}
+
+		document.addEventListener("deviceready", onDeviceReady, false);
+		 
+        // PhoneGap is ready
+        function onDeviceReady() {
+ 		// Do cool things here...
+        }
+ 
+        function getImage() {
+            // Retrieve image file location from specified source
+            navigator.camera.getPicture(uploadPhoto, function(message) {
+			alert('get picture failed');
+		},{
+			quality: 50, 
+			destinationType: navigator.camera.DestinationType.FILE_URI,
+			sourceType: navigator.camera.PictureSourceType.PHOTOLIBRARY
+		}
+            );
+ 
+        }
+ 
+        function uploadPhoto(imageURI) {             	
+
+            var options = new FileUploadOptions();
+            options.fileKey="file";
+            options.fileName=localStorage.getItem('User_Id');
+            options.mimeType="image/jpeg";
+            var params = new Object();
+            params.value1 = "test";
+            params.value2 = "param"; 
+            options.params = params;
+            options.chunkedMode = false;
+            var ft = new FileTransfer();
+            ft.upload(imageURI, "http://54.65.21.180:8080/upphoto", win, fail, options);
+            
+        }
+ 
+        function win(r) {
+            console.log("Code = " + r.responseCode);
+            console.log("Response = " + r.response);
+            console.log("Sent = " + r.bytesSent);
+            alert(r.response);
+            document.getElementById('abc').src = "http://54.65.21.180:8080/MyImage";	
+            location.replace('mypage.html');
+        }
+ 
+        function fail(error) {
+            alert("An error has occurred: Code = " = error.code);
+        }
+		 
 		</script>
 
 		<meta name="viewport" content="width=device-width; initial-scale=1.0">
@@ -61,14 +145,27 @@
 	</head>
 
 	<body>
+	
 		<div data-role="page">
 			<div data-role="header" data-theme="e">
 				<h1>내정보 창입니다.</h1>
-				<a href="#" data-rel="back" data-icon="arrow-l" class="ui-btn-left">뒤로</a>
+				<<a href="#" rel="external" onclick = "gotomain();"data-icon="arrow-l" class="ui-btn-left">뒤로</a>
 			</div>
 			<div data-role="content" data-theme="e">
 				<div id="info">
-					<img src="http://placehold.it/200x200"><br> <!--프로필 이미지-->
+			
+				<img id="profilephoto" src="" style="display:none;width:200%;">
+					<br> <!--프로필 이미지-->
+					<img id="abc" src="" height=150 width=auto>
+					
+					
+					<button onclick="getImage();">Upload a Photo</button>
+					
+					<div>
+					<ul data-role="listview" id ="testlist" data-theme="a">				
+					</ul>
+					</div>
+					<br><br>
 					<table id="myinfo">
 						<tr>
 							<td>이름</td>
