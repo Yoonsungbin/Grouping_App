@@ -10,7 +10,7 @@
 	<script>
 	
 		$(document).ready(function(){
-			
+			document.getElementById('aabc').src = "http://54.65.21.180:8080/MyImage";	
 								// 개인정보 가져오기 ---------------
 				// name, email, contribution 값을 데이터베이스에서 읽어 변수에 입력합니다.		
 				// 데이터를 알맞은 곳에 표시합니다.
@@ -109,7 +109,7 @@
             console.log("Response = " + r.response);
             console.log("Sent = " + r.bytesSent);
             alert(r.response);
-            document.getElementById('abc').src = "http://54.65.21.180:8080/MyImage";	
+            
             location.replace('mypage.html');
         }
  
@@ -156,7 +156,7 @@
 			
 				<img id="profilephoto" src="" style="display:none;width:200%;">
 					<br> <!--프로필 이미지-->
-					<img id="abc" src="" height=150 width=auto>
+					<img id="aabc" src="" height=150 width=auto>
 					
 					
 					<button onclick="getImage();">Upload a Photo</button>

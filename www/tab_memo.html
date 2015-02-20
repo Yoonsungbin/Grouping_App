@@ -7,6 +7,7 @@
 	<link rel="stylesheet" href="css/themes/MangoApp_theme.css" />
 	<link rel="stylesheet" href="css/themes/MangoApp_theme.min.css" />
 	<link rel="stylesheet" href="css/icon.css" />
+	<link rel="stylesheet" href="css/chat.css" />
 	<script src="http://code.jquery.com/jquery-1.11.2.min.js"></script>
 	<script	src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
 	<script src="fastclick.js"></script><!-- 버튼 클릭 딜레이 없애줌 -->
@@ -17,6 +18,7 @@
 	<link rel='stylesheet' type='text/css' href='http://arshaw.com/js/fullcalendar-1.5.4/fullcalendar/fullcalendar.css' />
 	<script type="text/javascript" charset="utf-8" src="cordova.js"></script><!-- 카메라 켜기위해 꼭 필요!! -->
 	<script src="js/Camera_Upload.js"></script>
+	  <script type="text/javascript" charset="utf-8" src="js/Get_Reg_ID.js"></script>
 	<script src="js/Calendar.js"></script>
 	<script src="js/Chat.js"></script>
 	<script src="js/Memo.js"></script>
@@ -69,7 +71,7 @@
 							<input type="text" name="memo_name" id="m_sbj" value="" data-theme="a">
 
 							<label for="select-participant" class="select">참여자</label>
-							<select	multiple="multiple"	name="select_choice[]" id="select-participant"	onclick="selectmember();">
+							<select	multiple="multiple"	name="select_choice[]" id="select-participant">
 							</select> 
 
 							<label for="memo_date_start">시작일</label>
@@ -155,8 +157,7 @@
 
 						<label for="select-participant" class="select">참여자</label> <select
 						multiple="multiple" 
-						name="select_choice[]" id="select-participant"
-						onclick="selectmember();"></select> 
+						name="select_choice[]" id="select-participant"></select> 
 						<label for="memo_date_start">시작일</label> 
 						<input type="date" name="memo_date_start" id="m_date_start" data-clear-btn="true" data-theme="a">
 
@@ -336,7 +337,7 @@
 				</div><!-- navbar -->
 			</div><!-- header -->
 
-			<div data-role="content" data-theme="a" id="txtarea">
+			<div data-role="content" data-theme="a" id="textarea">
 				<div id="chatheight" style="width: 100%; height: 95%; border: solid 1px; overflow: scroll; overflow-x: hidden;">
 					<ul id="messages"></ul>
 				</div>	

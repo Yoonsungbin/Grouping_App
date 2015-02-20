@@ -30,33 +30,30 @@ socket.on('connect',function() {
 		var text = '';
 		if (data.NewJoin == User_Name) {
 			if (data.Member == User_Name) {
-				text += "<div>";
-				text += "<span style='display:inline-block; .display:inline; float: right; border: 1px solid blue; margin:auto width:auto'>"
-					+ data.message + "</span>";
-				text += "<span style='display:inline-block; .display:inline; float: right; margin:auto width:auto'><sub>"
-					+ data.Time + "</sub></span>";
-				text += "</div><p>&nbsp;</p>";
+				text += "<div class = 'my'>";
+				  text += "<div class = 'msg'>"+ data.message+ "</div>";
+				  text += "<div class ='time'>" + data.Time+ "</div>";
+				  text += "</div><p>&nbsp;</p>";
 				$('#messages').append(text);
 				} else {
 					var text = '';	
-					text += "<div>";
-					text += "<span style='display:inline-block; .display:inline; float: left; border: 1px solid red; margin:auto width:auto'>"
-						+ data.Member + ':'	+ "</span>";
-					text += "<span style='display:inline-block; .display:inline; float: left; border: 1px solid red; margin:auto width:auto'>"
-						+ data.message + "</span>";
-					text += "<span style='display:inline-block; .display:inline; float: left; margin:auto width:auto'><sub>"
-						+ data.Time	+ "</sub></span>";
-					text += "</div><p>&nbsp;</p>";
-					$('#messages').append(text);
+					 text += "<div class='your'>";
+					  text += "<div class = 'member'>"+ data.Member + "</div>";
+					  text += "<div class = 'msg'>" + data.message + "</div>";
+					  text += "<div class = 'time'>"+ data.Time + "</div>";
+					  text += "</div><p>&nbsp;</p>";
+					  $('#messages').append(text);
 					}
 			}
-		var el = document.getElementById('messages');
-		el.scrollIntoView(false);
+		var scr = document.getElementById('messages');
+		  scr.scrollTop = scr.scrollHeight;
 		});
 	socket.on('putgreet', function(msg) {
 		$('#messages').append(
 				$('<h4 align="center">').text(msg));
 		});
+	var scr = document.getElementById('messages');
+	  scr.scrollTop = scr.scrollHeight;
 	// 접속유저 보이는 곳
 	// 접속한 사람을 알기위한 함수
 	socket.on('Connect_Member', function(data) {
@@ -101,37 +98,33 @@ socket.on('connect',function() {
 			$.each(DisConnect_List, function(index,	item) {
 				DisConnect_User +="<li class='ui-btn ui-shadow ui-btn-icon-right ui-icon-heart'>"+item.user + "</li>";
 				});
+		}
 			$('#nonaccess_user').empty();
 			$('#nonaccess_user').listview().listview('refresh');
 			$('#nonaccess_user').append(DisConnect_User).listview('refresh');
 			DisConnect_User = '';
 			DisConnect_List = '';
-		   }
+		   
 		});
 	socket.on('putmessage',function(data) {
 		if (data.User_Name == User_Name) {
 			var text = '';
-			text += "<div>";
-			text += "<span style='display:inline-block; .display:inline; float: right; border: 1px solid blue; margin:auto width:auto'>"
-				+ data.message + "</span>";	
-			text += "<span style='display:inline-block; .display:inline; float: right; margin:auto width:auto'><sub>"
-				+ data.Time + "</sub></span>";
-			text += "</div><p>&nbsp;</p>";
+			 text += "<div class = 'my'>";
+			  text += "<div class = 'msg'>"+ data.message+ "</div>";
+			  text += "<div class ='time'>" + data.Time+ "</div>";
+			  text += "</div><p>&nbsp;</p>";
 			$('#messages').append(text);
 			} 
 		else {
 			var text = '';
-			text += "<div>";
-			text += "<span style='display:inline-block; .display:inline; float: left; border: 1px solid red; margin:auto width:auto;'>"
-				+ data.User_Name + ':' + "</span>";
-			text += "<span style='display:inline-block; .display:inline; float: left; border: 1px solid red; margin:auto width:auto;'>"
-				+ data.message + "  </span>";
-			text += "<span style='display:inline-block; .display:inline; float: left; margin:auto width:auto;'><sub>"
-				+ data.Time	+ "</sub></span>";
-			text += "</div><p>&nbsp;</p>";
+			  text += "<div class='your'>";
+			  text += "<div class = 'member'>"+ data.User_Name + "</div>";
+			  text += "<div class = 'msg'>" + data.message + "</div>";
+			  text += "<div class = 'time'>"+ data.Time + "</div>";
+			  text += "</div><p>&nbsp;</p>";
 			$('#messages').append(text);
 			}
-		var el = document.getElementById('messages');
-		el.scrollIntoView(false);
+		var scr = document.getElementById('messages');
+		  scr.scrollTop = scr.scrollHeight;
 		});
 	});

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head manifest="cache.manifest"> 
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no">
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+	<link rel="stylesheet" href="css/themes/MangoApp_theme.css" />
+	<link rel="stylesheet" href="css/themes/MangoApp_theme.min.css" />
+	<script src="http://code.jquery.com/jquery-1.11.2.min.js"></script>
+	<script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+	<script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+
+</head>
+
+<body>
+	<div data-role="header" data-theme="a">
+		<h2>1월 4일 회식 메뉴 정하기</h2>
+		<a href="#" data-rel="back" data-icon="arrow-l" class="ui-btn-left">뒤로</a>
+	</div>
+
+	<div data-role="content" data-theme="a">
+
+		<form id="voting">
+			<label><input type="radio" name="vote">치킨</label>
+			<label><input type="radio" name="vote">삼겹살</label>
+			<label><input type="radio" name="vote">짜장면</label>
+			<label><input type="radio" name="vote">한우</label>
+			<a href="vote_list.html"><input type="button" id="submit_btn" value="제출하기"></a>
+		</form>
+	</div>
+</body>
+</html>

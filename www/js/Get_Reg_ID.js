@@ -33,27 +33,27 @@ document.addEventListener("deviceready", onDeviceReady, false);
 
         // result contains any message sent from the plugin call
         function successHandler (result) {
-            alert('result = '+result);
+           // alert('result = '+result);
             //$("#app-status-ul").append('<li>result = '+result+'</li>');
         }
 
         // result contains any error description text returned from the plugin call
         function errorHandler (error) {
-            alert('error = '+error);
+           // alert('error = '+error);
             //$("#app-status-ul").append('<li>error = '+error+'</li>');
         }
 
         function tokenHandler (result) {
             // Your iOS push server needs to know the token before it can push to this device
             // here is where you might want to send it the token for later use.
-            alert('device token = '+result);
+           // alert('device token = '+result);
             //$("#app-status-ul").append('<li>device token = '+result+'</li>');
         }
 
         // iOS
         function onNotificationAPN(event) {
             if (event.alert) {
-                navigator.notification.alert(event.alert);
+               // navigator.notification.alert(event.alert);
             }
 
             if (event.sound) {
@@ -117,6 +117,8 @@ document.addEventListener("deviceready", onDeviceReady, false);
                     else
                         $("#app-status-ul").append('<li>--BACKGROUND NOTIFICATION--' + '</li>');
 
+                    console.log('----------------------------');
+                    console.log(e.payload.title);
                     window.plugin.notification.local.add({ 
                         title       : e.payload.title,
                         message     : e.payload.message
@@ -127,7 +129,7 @@ document.addEventListener("deviceready", onDeviceReady, false);
                         
                     // });
             
-                     //}
+                     }
 
 
 

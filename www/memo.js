@@ -14,49 +14,15 @@ $(document).bind('pageinit', function() {
 		$('#pre_memolist').listview('refresh');
 	});
 });
-console.log('설정에 정보 띄웁니다.');
-$(document).on("click", "#tab_memo", function() {
-	var userinfo = "User Name : "+localStorage.getItem('User_Name')+"<br>User Email : "+localStorage.getItem('User_Email');
-	console.log(userinfo);
-	$('#user_subinfo_in_work').empty();
-	$('#user_subinfo_in_work').listview().listview('refresh');
-	$('#user_subinfo_in_work').append(userinfo).listview('refresh');
-});
-$(document).on("click", "#tab_schedule", function() {
-	var userinfo = "User Name : "+localStorage.getItem('User_Name')+"<br>User Email : "+localStorage.getItem('User_Email');
-	console.log(userinfo);
-	$('#user_subinfo_in_schedule').empty();
-	$('#user_subinfo_in_schedule').listview().listview('refresh');
-	$('#user_subinfo_in_schedule').append(userinfo).listview('refresh');
-});
-$(document).on("click", "#tab_addfunc", function() {
-	var userinfo = "User Name : "+localStorage.getItem('User_Name')+"<br>User Email : "+localStorage.getItem('User_Email');
-	console.log(userinfo);
-	$('#user_subinfo_in_addfunc').empty();
-	$('#user_subinfo_in_addfunc').listview().listview('refresh');
-	$('#user_subinfo_in_addfunc').append(userinfo).listview('refresh');
-});
-$(document).on("click", "#tab_chat", function() {
-	var userinfo = "User Name : "+localStorage.getItem('User_Name')+"<br>User Email : "+localStorage.getItem('User_Email');
-	console.log(userinfo);
-	$('#user_subinfo_in_chat').empty();
-	$('#user_subinfo_in_chat').listview().listview('refresh');
-	$('#user_subinfo_in_chat').append(userinfo).listview('refresh');
-});
-
-
-/*$('#user_subinfo_in_schedule').append(userinfo);
-$('#user_subinfo_in_addfunc').append(userinfo);
-$('#user_subinfo_in_chat').append(userinfo);*/
-//$('#user_subinfo_in_work').append(userinfo);
-
 
 //업무 클릭시 memo_show.html로 넘어감
 $(document).on("click", ".memolist", function() {
 	var tempid = $(this).parent().attr('id');
-	console.log('memo 선택했을때 나오는 id입니다. :' + tempid);
-	console.log('Project_Work_Id에 추가합니다.');
-	localStorage.setItem("Project_Work_Id", tempid);	
+	console.log('hi');
+	console.log('asdjklqjwkldjklasjdkljklqjwkljdaklsjdklqwjdklasjkldjqklwjklasjkldjklasjdklasjdq');
+	console.log(tempid);
+	console.log(this.id);
+	localStorage.setItem("Project_Work_Id", tempid);
 	location.replace('memo_show.html');
 });
 
@@ -64,10 +30,8 @@ $(document).on("click", ".memolist", function() {
 $(document).on("click", ".deletememo", function() {
 	var tempid = $(this).parent().attr('id');
 	localStorage.setItem('Select_Project_Id',  $(this).parent().attr('id'));
-	console.log($(this).parent().attr('id'));
 	$('#deletememo').popup("open");
 });
-
 
 //업무리스트를 디비와 연동해서 보여지게 하는 부분
 $.ajax({
@@ -93,6 +57,7 @@ $.ajax({
 				Work_Name[i] = memotemp.Work_Name[i];
 				if(memotemp.Work_DueDate[i]==null){
 					Work_DueDate[i] = 0;
+
 				} else {
 					Work_DueDate[i] = memotemp.Work_DueDate[i];
 				}
@@ -136,8 +101,8 @@ function deletememo(){
 	}
 
 //업무 추가에서 멤버 선택 함수
-
-	console.log('selectmember 시작');
+function selectmember() {
+		console.log('selectmember 시작');
 		console.log(localStorage.getItem('Project_Id'));
 		$.ajax({
 			url : 'http://54.65.21.180:8080/appgetprojectmember',
@@ -154,10 +119,16 @@ function deletememo(){
 				console.log(temp[0]);
 				var count = temp[0].In_Member.length;
 				var list = [];	
-				console.log('selectmember count: '+count);
+
+
+				console.log(count);
+
 				for (var i = 0; i < count; i++) {
-					list.push({'user': temp[0].In_Member[i], 'id':temp[0].Member_Id[i]});		
+					list.push({'user': temp[0].In_Member[i], 'id':temp[0]._id[i]});		
 				}
+
+				var index = 0;
+
 				var text = "";
 				$.each(list, function(index, item) {
 					text += "<option value="+item.id+">" + item.user
@@ -167,9 +138,11 @@ function deletememo(){
 				$('#select-participant').listview().listview('refresh');
 				$('#select-participant').append(text).listview('refresh');
 				text = "";
+				index = 0;
 				list = [];
 			}
 		});
+	}
 
 //설정패널에서 다른 곳으로 넘어갈 때
 function mypagefunc(){
@@ -187,20 +160,6 @@ function mypagefunc(){
 
 //업무 추가 버튼 클릭시 
 function memoaddfunc() {
-	if($('#m_sbj').val()==''){
-		console.log('null');
-		alert('메모명을 입력해주세요');
-	}
-	else if( $('#memo_date_start').val()==''){
-		console.log('null');
-		alert('시작일을 입력해주세요');
-	}
-	else if($('#memo_date_finish').val()==''){
-		console.log('null');
-		alert('마감일을 입력해주세요')
-	}
-	else
-		{
 		var Work_Person = new Array();
 		var sel = document.getElementsByTagName('select').item(0);
 		$('#select-participant > option:selected').each(function() {
@@ -218,51 +177,39 @@ function memoaddfunc() {
 			type : 'POST',
 			data : {
 				'Project_Id' : localStorage.getItem('Project_Id'),
-				'Project_Name' : localStorage.getItem('Project_Name'),
 				'Work_Name' : $('#m_sbj').val(),
 				'Work_Memo' : $('#m_textarea').val(),
-				'Work_Sday' : $('#memo_date_start').val(),
-				'Work_Dday' : $('#memo_date_finish').val(),
+				'Work_Sday' : $('#m_date_start').val(),
+				'Work_Dday' : $('#m_date_end').val(),
 				'Work_Finish' : 'ing',
-				'Work_Person' : dataform,
-				'AppId' : localStorage.getItem('App_Id'),
+				'Work_Person' : dataform
 			},
 			success : function(result) {
 				console.log('success');
 			}
 		});
 		location.replace('tab_memo.html');
-		}
 	}
 
 //프로젝트에 멤버 추가시 사용되는 함수
-
 function addprojectmember() {
-   $.ajax({
-      url : 'http://54.65.21.180:8080/addprojectmember',
-      dataType : 'json',
-      type : 'POST',
-      data : {
-         'Project_Id' : localStorage.getItem('Project_Id'),
-         'Member_Email' : $("#member_name").val(),
-         //프로젝트 내용
-      },
-      success : function(result) {
-         console.log('여기까진됨');
-         if(result.suc == 1){
-            console.log('멤버 추가 실패');
-            alert('해당하는 멤버가 없습니다.');
-         }
-         else if(result.suc == 2){
-            console.log('success');         
-            $('#add_member').popup("close");
-            location.replace('tab_memo.html');
-         }
-         else
-            {      
-               console.log('멤버 추가 실패');
-               alert('이미 해당 프로젝트에 멤버가 있습니다.');
-            }
-      }
-   });
+	$.ajax({
+		url : 'http://54.65.21.180:8080/addprojectmember',
+		dataType : 'json',
+		type : 'POST',
+		data : {
+			'Project_Id' : localStorage.getItem('Project_Id'),
+			'Member_Email' : $("#member_name").val(),
+			'User_Email' : localStorage.getItem('User_Email'),
+			'User_Pass' : localStorage.getItem('User_Pass')
+			//프로젝트 내용
+		},
+		success : function(result) {
+
+			console.log('success');
+
+			//$('#add_member').popup("close");
+			$('#add_member').popup("close");
+		}
+	});
 }

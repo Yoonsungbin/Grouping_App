@@ -1,0 +1,58 @@
+<!DOCTYPE html> 
+<html manifest="cache.manifest">
+<head>
+   <meta charset="utf-8">
+   <meta name="viewport" content="width=device-width, user-scalable=no">
+   <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+   <link rel="stylesheet" href="css/themes/MangoApp_theme.css" />
+   <link rel="stylesheet" href="css/themes/MangoApp_theme.min.css" />
+   <script src="http://code.jquery.com/jquery-1.11.2.min.js"></script>
+   <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+   <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+</head> 
+<body>
+   <script>
+      function clickhere(){
+         console.log('success1');
+         $.ajax({
+            url : 'http://54.65.21.180:8080/appregister',
+            dataType : 'json',
+            type : 'POST',
+            data : {
+               'User_Name' : $("#username").val(),              
+               'User_Email' : $("#email").val(),
+               'User_Pass' : $("#password").val()
+         //프로젝트 내용
+      },
+      success : function(result) {
+
+         window.location = "index.html";
+
+
+      }
+   });
+
+      }
+   </script>
+   <div data-role="page" data-theme="a">
+      <div data-role="header">
+         <h1>회원가입</h1>
+         <a href="index.html" data-icon="arrow-l" class="ui-btn-left">뒤로</a>
+      </div>
+
+      <div data-role="main" class="ui-content">
+         <form>
+            <div class="ui-field-contain">
+               <label for="username">이름</label>
+               <input type="text" name="username" id="username" placeholder="홍길동"><p>                   
+               <label for="email">이메일</label>
+               <input type="text" name="email" id="email" placeholder="abc#yonsei.ac.kr"><p>
+               <label for="password">비밀번호</label>
+               <input type="password" name="password" id="password" placeholder="********">
+            </div>
+            <input type="submit" data-inline="true" value="가입하기" onclick = "clickhere();" >
+         </form>
+      </div>
+   </div>
+</body>
+</html>
