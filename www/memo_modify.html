@@ -66,7 +66,7 @@ $.ajax({
 					}
 					else
 						{
-						var chec = document.getElementsByName("select_participant_name");		
+							
 							for(var i = 0; i<count2-1; i++){			
 								text += temp1[i].User_Name + ', ';												
 								console.log(temp1[i].User_Name);
@@ -80,14 +80,14 @@ $.ajax({
 							$("#select_participant_1").selectmenu("refresh");
 							
 						}
-					if(result1.Work_Finish == "ing"){
+					if(result1.Work_Finish == "true"){
+						$("#memoFinish").val("true").slider().slider("refresh");	
 					}
 					else
 						{			
-							$("#memoFinish").val("finish");
+							$("#memoFinish").val("false").slider().slider("refresh");
 							console.log($("#memoFinish").val());			
-							$("memoFinish").flipswitch("refresh");
-						}				
+						}
 					document.temp.selectmemotitle.value = result1.Work_Name;							
 					$("#modify_date1").val(result1.Work_Dday);
 					document.temp.modify_date_start.value = result1.Work_Sday;
@@ -162,9 +162,9 @@ function memomodifyfunc(){
 						<h1>
 							<b>업무 완성도</b>
 						</h1>
-						<select id="memoFinish" class = "finish1" name = "memoFinishname" data-role="none">
-							<option value="ing">진행 중</option>
-							<option value="finish">완료</option>
+						<select id="memoFinish" class = "finish1" name = "memoFinishname" data-role="slider">
+							<option value="false" name ="진행 중">진행 중</option>
+							<option value="true" name = "완료">완료</option>
 						</select>
 					</li>
 						<li class="ui-field-contain">

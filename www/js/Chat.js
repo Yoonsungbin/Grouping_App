@@ -19,6 +19,7 @@ socket.on('connect',function() {
 		var current_time = Time.getHours() + ":"+ Time.getMinutes();
 		socket.emit('getmessage', {
 			message : message,
+			User_Id : localStorage.getItem('User_Id'),
 			User_Name : User_Name,
 			Time : current_time
 			});
@@ -98,7 +99,7 @@ socket.on('connect',function() {
 			$.each(DisConnect_List, function(index,	item) {
 				DisConnect_User +="<li class='ui-btn ui-shadow ui-btn-icon-right ui-icon-heart'>"+item.user + "</li>";
 				});
-		}
+			}
 			$('#nonaccess_user').empty();
 			$('#nonaccess_user').listview().listview('refresh');
 			$('#nonaccess_user').append(DisConnect_User).listview('refresh');
@@ -109,6 +110,7 @@ socket.on('connect',function() {
 	socket.on('putmessage',function(data) {
 		if (data.User_Name == User_Name) {
 			var text = '';
+			 text += "<img src='/DownloadProfile/"+Uid+"' width=50px height=50px>";
 			 text += "<div class = 'my'>";
 			  text += "<div class = 'msg'>"+ data.message+ "</div>";
 			  text += "<div class ='time'>" + data.Time+ "</div>";

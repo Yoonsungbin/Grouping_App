@@ -15,71 +15,77 @@
 <script>
 
 
-	  $.ajax({
-      url : 'http://54.65.21.180:8080/appshowmemo',
-      dataType : 'json',
-      type : 'POST',
-      data :  
-      {
-         'Project_Work_Id' : localStorage.getItem('Project_Work_Id')
-      },
-      success : function(result){
-    	  
-    	  //할일 정보 보여주는 부분
-         var Work = new Array();   
-         var memodataform = JSON.stringify(result);
-         var memotemp = JSON.parse(memodataform);
-         var dataform = JSON.stringify(result.Work_Person);
-         var temp = JSON.parse(dataform);
-         var count = temp.length;   
-         var text = '';         
-         if(count == 0){
-            text = '';
-         }
-         else
-         {
-            for(var i = 0; i<count-1; i++){         
-               text += temp[i].User_Name + ', ';   
-            }
-            text += temp[i].User_Name;
-         }         
-         $('#memosubject').append(result.Work_Name);
-         $('#memoperson').append(text);
-         $('#memdetail').append(result.Work_Memo);
-         $('#memoSday').append(result.Work_Sday);
-         $('#memoDday').append(result.Work_Dday);
-         $('#memoFinish').append(result.Work_Finish);
-         
-      }
-   });
-
-
-
-
-	var Work = [];
 	$.ajax({
-		url : 'http://54.65.21.180:8080/appgetcomment',
+		url : 'http://54.65.21.180:8080/appshowmemo',
 		dataType : 'json',
 		type : 'POST',
-		data : {
+		data :  
+		{
 			'Project_Work_Id' : localStorage.getItem('Project_Work_Id')
 		},
-		success : function(result) {		
-			var memodataform = JSON.stringify(result);
-			var memotemp = JSON.parse(memodataform);
-			var memocount = memotemp.length;
-			for (var i = 0; i < memocount; i++) {
-				Work[i] = memotemp[i].Work_Comment;
-			}
-			var list = [];
-			var index = 0;		
-			for (var i = 0; i < memocount; i++) {
-				list.push({
-					'comment' : Work[i].Comment,
-					'c_User' : Work[i].Comment_User,
-					'comment_id' : memotemp[i]._id
-				});	
-			}		
+		success : function(result){
+
+    	  //할일 정보 보여주는 부분
+    	  var Work = new Array();   
+    	  var memodataform = JSON.stringify(result);
+    	  var memotemp = JSON.parse(memodataform);
+    	  var dataform = JSON.stringify(result.Work_Person);
+    	  var temp = JSON.parse(dataform);
+    	  var count = temp.length;   
+    	  var text = '';         
+    	  if(count == 0){
+    	  	text = '';
+    	  }
+    	  else
+    	  {
+    	  	for(var i = 0; i<count-1; i++){         
+    	  		text += temp[i].User_Name + ', ';   
+    	  	}
+    	  	text += temp[i].User_Name;
+    	  }         
+    	  var Work_Finish = '';
+    	  if(result.Work_Finish == 'false'){
+    	  	Work_Finish = '진행 중';
+    	  }
+    	  else
+    	  {
+    	  	Work_Finish = '완료';
+    	  }
+
+    	  $('#memosubject').append(result.Work_Name);
+    	  $('#memoperson').append(text);
+    	  $('#memdetail').append(result.Work_Memo);
+    	  $('#memoSday').append(result.Work_Sday);
+    	  $('#memoDday').append(result.Work_Dday);
+    	  $('#memoFinish').append(Work_Finish);
+
+    	}
+    });
+
+
+
+
+var Work = [];
+$.ajax({
+	url : 'http://54.65.21.180:8080/appgetcomment',
+	dataType : 'json',
+	type : 'POST',
+	data : {
+		'Project_Work_Id' : localStorage.getItem('Project_Work_Id')
+	},
+	success : function(result) {		
+		var memodataform = JSON.stringify(result);
+		var memotemp = JSON.parse(memodataform);
+		var memocount = memotemp.length;			
+		var list = [];
+		var index = 0;		
+		for (var i = 0; i < memocount; i++) {
+			list.push({
+				'comment' : memotemp[i].Comment,
+				'c_User' : memotemp[i].Comment_User,
+				'comment_id' : memotemp[i]._id
+			});	
+		}		
 			//댓글 보여주는 부분			
 			var text = "";
 			$.each(list, function(index, item){		
@@ -153,18 +159,6 @@ function modifycomment(){
 }
 
 function commentadd(){
-	var Work_Comment = new Array();
-	var Comment_Info = new Object();
-	
-	
-	Comment_Info.Comment_User = localStorage.getItem('User_Name');
-	Comment_Info.Comment = $("#comment_add").val();
-	
-
-	Work_Comment.push(Comment_Info);
-	
-	var dataform = JSON.stringify(Comment_Info);
-	console.log(dataform);
 	
 	$.ajax({
 		url : 'http://54.65.21.180:8080/appaddcomment',
@@ -172,7 +166,8 @@ function commentadd(){
 		type : 'POST',
 		data : {
 			'Project_Work_Id' : localStorage.getItem('Project_Work_Id'),
-			'Comment' : dataform
+			'Comment_User' : localStorage.getItem('User_Name'),
+			'Comment' : $("#comment_add").val()
 		},
 		success : function(result) {	
 			console.log('memoadd complete');
@@ -205,52 +200,19 @@ function gototab_memo(){
 			<form>
 				<ul data-role="listview" data-inset="false">
 					<li class="ui-field-contain">  
-						<h1>
-							<b>메모명</b>
-						</h1>
-						<h2 id="memosubject"></h2>          
+						<ul data-role="listview" data-inset="true">
+							<li data-role="list-divider">메모명</li>
+							<li id="memosubject"></li>
+							<li data-role="list-divider">참여자</li>
+							<li id="memoperson"></li>
+							<li data-role="list-divider">업무완성도</li>
+							<li id="memoFinish"></li>
+							<li data-role="list-divider">기간</li>
+							<li><span id="memoSday"></span> ~ <span id="memoDday"></span></li>
+							<li data-role="list-divider">할일</li>
+							<li id="memdetail"></li>
+						</ul>
 					</li>
-
-					<li class="ui-field-contain">
-						<h1>
-							<b>참여자</b>
-						</h1>
-						<h2 id="memoperson"></h2>         
-					</li>
-
-					<li class="ui-field-contain">
-						<h1>
-							<b>업무 완성도</b>
-						</h1>
-
-						<h3 id="memoFinish">
-
-						</h4>
-					</li>
-					               <li class="ui-field-contain">
-                  <h1>
-                     <b>시작일</b>
-                  </h1>
-                  <h3 id="memoSday">
-                  </h4>
-               </li>              
-               <li class="ui-field-contain">
-                  <h1>
-                     <b>마감일</b>
-                  </h1>
-                  <h3 id="memoDday">
-                  </h4>
-               </li>
-					
-					<li class="ui-field-contain">
-						<h1>
-							<b>할일</b>
-						</h1>
-						<h3 id="memdetail"></h3>         
-					</li>
-
-					
-
 				</ul>
 			</form>
 		</div>
@@ -283,7 +245,7 @@ function gototab_memo(){
 				<div class="ui-block-a" style="width: 80%;">
 					<textarea name="comment_add" id="comment_add"></textarea>
 				</div>
-				<div class="ui-block-b" style="width: 20%;">
+				<div class="ui-block-b" style="width: 20%; padding-top: 7px;">
 					<a href="#"
 					class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b ui-icon-plus ui-btn-icon-left"
 					onclick="commentadd();" rel="external" style="height: 20px;">추가</a>

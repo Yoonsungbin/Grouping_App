@@ -56,13 +56,7 @@
 			<div data-role="panel" id="pluspanel" data-position="right" data-position-fixed="true" data-display="overlay" data-theme="a">
 
 				<div data-role="collapsibleset" data-theme="a" data-content-theme="a">
-					<div data-role="collapsible">
-						<h4>멤버추가</h4>
-						<label for="member_name">멤버이메일</label>
-						<input type="text" name="member_name" id="member_name" value="" data-theme="a">
-						<a href='' id="add_member_submit" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-btn-icon-left ui-icon-check" 
-						onclick="addprojectmember();">추가</a>
-					</div>
+					
 
 					<div data-role="collapsible">
 						<h4>업무추가</h4>
@@ -90,6 +84,14 @@
 							</div>	
 						</form>
 					</div>
+					<div data-role="collapsible">
+						<h4>멤버추가</h4>
+						<label for="member_name">멤버이메일</label>
+						<input type="text" name="member_name" id="member_name" value="" data-theme="a">
+						<a href='' id="add_member_submit" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-btn-icon-left ui-icon-check" 
+						onclick="addprojectmember();">추가</a>
+					</div>
+
 
 					<div data-role="collapsible">
 						<h4>사진업로드</h4>								
@@ -203,10 +205,10 @@
 				<br>
 
 				<ul data-role="listview" data-theme="a">
-					<li><a href="mypage.html">내 정보</a></li>
-					<li><a href="project_select.html">프로젝트 선택창</a></li>
-					<li><a href="App_community.html">커뮤니티</a></li>
-					<li><a href="index.html">로그아웃</a></li>
+					<li><a href="" onclick="mypagefunc();">내 정보</a></li>
+					<li><a href="" onclick="project_selectfunc();">프로젝트 선택창</a></li>
+					<li><a href="" onclick="App_communityfunc();">커뮤니티</a></li>
+					<li><a href="" onclick="logout();">로그아웃</a></li>
 				</ul>
 			</div><!-- 설정 패널창 -->
 
@@ -249,10 +251,10 @@
 				<br>
 
 				<ul data-role="listview" data-theme="a">
-					<li><a href="mypage.html">내 정보</a></li>
-					<li><a href="project_select.html">프로젝트 선택창</a></li>
-					<li><a href="App_community.html">커뮤니티</a></li>
-					<li><a href="index.html">로그아웃</a></li>
+					<li><a href="" onclick="mypagefunc();">내 정보</a></li>
+					<li><a href="" onclick="project_selectfunc();">프로젝트 선택창</a></li>
+					<li><a href="" onclick="App_communityfunc();">커뮤니티</a></li>
+					<li><a href="" onclick="logout();">로그아웃</a></li>
 				</ul>
 			</div>
 			<!-- 설정 패널창 -->
@@ -272,7 +274,7 @@
 
 			<div data-role="content" data-theme="a">
 				<div data-role="navbar" data-theme="a">
-					<a href="vote_list.html">투표</a>
+					<a href="#" onclick="gotovote();")>투표</a>
 				</div><!-- navbar -->
 			</div><!-- content -->
 
@@ -314,13 +316,6 @@
 			
 		</ul>
 
-
-
-
-
-
-
-
 			</div><!-- 멤버보기 패널창 -->
 
 			<div data-role="header" data-theme="a" data-position="fixed" data-tap-toggle="false">
@@ -351,11 +346,13 @@
 	</div><!-- content -->
 
 	<div data-role="footer" data-position="fixed" data-tap-toggle="false">
-		<form id="" class="ui-grid-a">
-			<div class="ui-block-a" style="width: 80%">
+		<form id="" class="ui-grid-b">
+			<div class="ui-block-a" style="width: 2%">
+			</div>
+			<div class="ui-block-b" style="width: 80%">
 				<input type="text" id="m" autocomplete="off" data-inline="true">
 			</div>
-			<div class="ui-block-b" style="width: 20%">
+			<div class="ui-block-b" style="width: 18%; padding-top: 2px;">
 				<input type="submit" class="ui-btn" id="target" value="전 송" data-inline="false">
 			</div>
 		</form>

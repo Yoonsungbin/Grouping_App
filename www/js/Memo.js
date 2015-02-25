@@ -2,6 +2,30 @@
 $.mobile.defaultPageTransition = 'none'
 $.mobile.defaultDialogTransition = 'none'
 $.mobile.buttonMarkup.hoverDelay = 0
+$(document).ready( function() {
+    var now = new Date();
+    var day = ("0" + now.getDate()).slice(-2);
+    var month = ("0" + (now.getMonth() + 1)).slice(-2);
+    var today = now.getFullYear()+"-"+month+"-"+day ;
+    //$('#m_date_start').val(today);
+       $('#memo_date_start').val(today);
+     console.log(today);
+    console.log($("#memo_date_start").val()); 
+    $('#user_subinfo_in_work').empty();
+    $('#user_subinfo_in_work').listview().listview('refresh');
+    $('#user_subinfo_in_work').append(userinfo).listview('refresh');
+    $('#user_subinfo_in_schedule').empty();
+    $('#user_subinfo_in_schedule').listview().listview('refresh');
+    $('#user_subinfo_in_schedule').append(userinfo).listview('refresh');
+    $('#user_subinfo_in_addfunc').empty();
+    $('#user_subinfo_in_addfunc').listview().listview('refresh');
+    $('#user_subinfo_in_addfunc').append(userinfo).listview('refresh');
+    $('#user_subinfo_in_chat').empty();
+    $('#user_subinfo_in_chat').listview().listview('refresh');
+    $('#user_subinfo_in_chat').append(userinfo).listview('refresh');
+  //  document.getElementById("#memo_date_start").value = today;
+    
+});
 
 // 업무에서 드래그 앤 드롭 관련
 $(document).bind('pageinit', function() {
@@ -14,41 +38,31 @@ $(document).bind('pageinit', function() {
 		$('#pre_memolist').listview('refresh');
 	});
 });
+$(document).bind("mobileinit",function() {$.mobile.page.prototype.options.addBackBtn = true; });
+
 console.log('설정에 정보 띄웁니다.');
-$(document).on("click", "#tab_memo", function() {
-	var userinfo = "User Name : "+localStorage.getItem('User_Name')+"<br>User Email : "+localStorage.getItem('User_Email');
-	console.log(userinfo);
-	$('#user_subinfo_in_work').empty();
-	$('#user_subinfo_in_work').listview().listview('refresh');
-	$('#user_subinfo_in_work').append(userinfo).listview('refresh');
+var userinfo = "User Name : "+localStorage.getItem('User_Name')+"<br>User Email : "+localStorage.getItem('User_Email');
+console.log(userinfo);
+
+/*$(document).on("click", "#tab_memo", function() {
+	
 });
 $(document).on("click", "#tab_schedule", function() {
 	var userinfo = "User Name : "+localStorage.getItem('User_Name')+"<br>User Email : "+localStorage.getItem('User_Email');
 	console.log(userinfo);
-	$('#user_subinfo_in_schedule').empty();
-	$('#user_subinfo_in_schedule').listview().listview('refresh');
-	$('#user_subinfo_in_schedule').append(userinfo).listview('refresh');
+	
 });
 $(document).on("click", "#tab_addfunc", function() {
 	var userinfo = "User Name : "+localStorage.getItem('User_Name')+"<br>User Email : "+localStorage.getItem('User_Email');
 	console.log(userinfo);
-	$('#user_subinfo_in_addfunc').empty();
-	$('#user_subinfo_in_addfunc').listview().listview('refresh');
-	$('#user_subinfo_in_addfunc').append(userinfo).listview('refresh');
+	
 });
 $(document).on("click", "#tab_chat", function() {
 	var userinfo = "User Name : "+localStorage.getItem('User_Name')+"<br>User Email : "+localStorage.getItem('User_Email');
 	console.log(userinfo);
-	$('#user_subinfo_in_chat').empty();
-	$('#user_subinfo_in_chat').listview().listview('refresh');
-	$('#user_subinfo_in_chat').append(userinfo).listview('refresh');
-});
+	
+});*/
 
-
-/*$('#user_subinfo_in_schedule').append(userinfo);
-$('#user_subinfo_in_addfunc').append(userinfo);
-$('#user_subinfo_in_chat').append(userinfo);*/
-//$('#user_subinfo_in_work').append(userinfo);
 
 
 //업무 클릭시 memo_show.html로 넘어감
@@ -157,11 +171,13 @@ function deletememo(){
 				console.log('selectmember count: '+count);
 				for (var i = 0; i < count; i++) {
 					list.push({'user': temp[0].In_Member[i], 'id':temp[0].Member_Id[i]});		
+					console.log(temp[0].Member_Id[i]);
 				}
 				var text = "";
 				$.each(list, function(index, item) {
 					text += "<option value="+item.id+">" + item.user
 					+ "</option>";
+					console.log(item.id);
 				});			
 				$('#select-participant').empty();
 				$('#select-participant').listview().listview('refresh');
@@ -183,6 +199,9 @@ function mypagefunc(){
 	}
 	function logout(){
 		location.replace('index.html');
+	}
+	function gotovote(){
+		location.replace('vote_list.html');
 	}
 
 //업무 추가 버튼 클릭시 
@@ -208,6 +227,7 @@ function memoaddfunc() {
 			console.log($(this).text());
 			User_Info.User_Name = $(this).text();
 			User_Info.User_Id = $(this).val();
+			console.log($(this).val());
 			Work_Person.push(User_Info);
 			console.log(Work_Person);
 		});
@@ -252,16 +272,19 @@ function addprojectmember() {
          if(result.suc == 1){
             console.log('멤버 추가 실패');
             alert('해당하는 멤버가 없습니다.');
+           // location.replace('tab_memo.html');
          }
          else if(result.suc == 2){
-            console.log('success');         
-            $('#add_member').popup("close");
+            console.log('success');    
             location.replace('tab_memo.html');
+           //$('#add_member').popup("close");
+           // location.replace('tab_memo.html');
          }
          else
             {      
                console.log('멤버 추가 실패');
                alert('이미 해당 프로젝트에 멤버가 있습니다.');
+               //location.replace('tab_memo.html');
             }
       }
    });

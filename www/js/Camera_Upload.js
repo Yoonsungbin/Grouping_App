@@ -106,6 +106,8 @@ function win(r) {
     console.log("Code = " + r.responseCode);
     console.log("Response = " + r.response);
     console.log("Sent = " + r.bytesSent);
+    alert('성공적으로 사진이 업로드 되었씁니다.');
+    location.replace('tab_memo.html');
 }
 
 function fail(error) {
