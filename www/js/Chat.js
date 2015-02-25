@@ -110,7 +110,7 @@ socket.on('connect',function() {
 	socket.on('putmessage',function(data) {
 		if (data.User_Name == User_Name) {
 			var text = '';
-			 text += "<img src='/DownloadProfile/"+Uid+"' width=50px height=50px>";
+			 //text += "<img src='/DownloadProfile/"+Uid+"' width=50px height=50px>";
 			 text += "<div class = 'my'>";
 			  text += "<div class = 'msg'>"+ data.message+ "</div>";
 			  text += "<div class ='time'>" + data.Time+ "</div>";
