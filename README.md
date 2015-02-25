@@ -13,5 +13,5 @@
 - cordova plugin add org.apache.cordova.splashscreen 
 
 ## 플러그인 삭제법
-- cordova plugin rm [해당 플러그인]
+- cordova plugin rm 해당 플러그인
 ###해당 플러그인 확인 법은 cordova plugin ls 로 한다.
